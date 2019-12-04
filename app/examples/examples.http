@@ -1,0 +1,42 @@
+
+
+//create park
+POST http://localhost:8080/parking HTTP/1.1
+content-type: application/json
+
+{
+    "status": 0,
+    "posizione": "{{$randomInt 0 100}}",
+    "comune": "Treia",
+    "costoorario": 6
+}
+###
+//home
+GET http://localhost:8080/ HTTP/1.1
+###
+
+//update park
+PUT http://localhost:8080/parking/10 HTTP/1.1
+content-type: application/json
+
+{
+    "status": 0,
+    "posizione": "{{$randomInt 0 100}}",
+    "comune": "APPIGNANO",
+    "costoorario": 6
+}
+###
+
+//remove park
+DELETE http://localhost:8080/parking/10 HTTP/1.1
+###
+
+//get all park
+GET http://localhost:8080/parking HTTP/1.1
+###
+//get park by id
+GET http://localhost:8080/parking/26 HTTP/1.1
+###
+//delete all park
+DELETE http://localhost:8080/parking HTTP/1.1
+###
