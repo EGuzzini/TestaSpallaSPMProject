@@ -5,7 +5,8 @@ const sql = require("./db.js");
 const Parkingslot = function(ps) {
     
     this.status = ps.status;
-    this.posizione = ps.posizione;
+    this.posx = ps.posx;
+    this.posy = ps.posy;
     this.comune= ps.comune;
     this.costoorario=ps.costoorario;
   };
@@ -42,8 +43,9 @@ const Parkingslot = function(ps) {
     });
   };
   
-  Parkingslot.findByPosition = (posizione, result) => {
-    sql.query(`SELECT * FROM parkingslot WHERE posizione = ${posizione}`, (err, res) => {
+  Parkingslot.findByPosition = (posx,posy, result) => {
+    console.log(posx+"  "+posy);
+    sql.query(`SELECT * FROM parkingslot WHERE posx = ${posx} AND posy = ${posy}`, (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(err, null);
@@ -75,8 +77,8 @@ const Parkingslot = function(ps) {
 
   Parkingslot.updateById = (id, parkingslot, result) => {
     sql.query(
-      "UPDATE parkingslot SET status = ?, posizione = ?, comune = ?, costoorario=? WHERE idparkingslot = ?",
-      [parkingslot.status, parkingslot.posizione, parkingslot.comune, parkingslot.costoorario,id],
+      "UPDATE parkingslot SET status = ?, posx = ?, posy = ?,comune = ?, costoorario=? WHERE idparkingslot = ?",
+      [parkingslot.status, parkingslot.posx, parkingslot.posy, parkingslot.comune, parkingslot.costoorario,id],
       (err, res) => {
         if (err) {
           console.log("error: ", err);

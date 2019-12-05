@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
   });
 var routes = require('./app/routes/appRoutes'); //importing route
 app.use(routes); //register the route
-app.listen(8080, () => {
+app.listen(8080,function() {
     console.log("Server is listening on port: 8080");
   });
 module.exports=app;

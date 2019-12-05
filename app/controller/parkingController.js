@@ -9,23 +9,20 @@ exports.create = (req, res) => {
       message: "Content can not be empty!"
     });
   }
-
   console.log(req.body);
   // Create a Customer
   const ps = new Parkingslot({
     status: req.body.status,
-    posizione: req.body.posizione,
+    posx: req.body.posx,
+    posy: req.body.posy,
     comune: req.body.comune,
     costoorario: req.body.costoorario
-
   });
 
-  Parkingslot.findByPosition(ps.posizione, (err, data) => {
-    console.log(ps.posizione + " posizione ");
-
-    if (data !== null) {
+  Parkingslot.findByPosition(ps.posx,ps.posy, (err, data) => {
+     if (data !== null) {
       res.status(404).send({
-        message: `already exist a Parking with position ${ps.posizione}.`
+        message: `already exist a Parking with posx ${ps.posx} and posy ${ps.posy} .`
       });
     } else {
 

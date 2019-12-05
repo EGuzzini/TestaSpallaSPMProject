@@ -6,9 +6,10 @@ content-type: application/json
 
 {
     "status": 0,
-    "posizione": "{{$randomInt 0 100}}",
-    "comune": "Treia",
-    "costoorario": 6
+    "posx": 3.2,
+    "posy": 5.5,
+    "comune": "montecassiano",
+    "costoorario": 6.3
 }
 ###
 //home
