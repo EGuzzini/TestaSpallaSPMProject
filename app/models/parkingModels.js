@@ -45,13 +45,13 @@ const Parkingslot = function(ps) {
   
   Parkingslot.findByPosition = (posx,posy, result) => {
     console.log(posx+"  "+posy);
-    sql.query(`SELECT * FROM parkingslot WHERE posx = ${posx} AND posy = ${posy}`, (err, res) => {
+    sql.query(`SELECT * FROM parkingslot WHERE FORMAT(posx,1) = FORMAT(${posx},1) AND FORMAT(posy,1) = FORMAT(${posy},1)`, (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(err, null);
         return;
       }
-  
+  console.log(res.data +"  res");
       if (res.length) {
         console.log("found parking slot with position: ", res[0]);
         result(null, res[0]);

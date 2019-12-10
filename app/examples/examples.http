@@ -1,13 +1,13 @@
 
 
 //create park
-POST http://localhost:8080/parking HTTP/1.1
+POST http://localhost:80/parking HTTP/1.1
 content-type: application/json
 
 {
     "status": 0,
-    "posx": 3.2,
-    "posy": 5.5,
+    "posx": 81.3,
+    "posy": 66.5,
     "comune": "montecassiano",
     "costoorario": 6.3
 }
@@ -22,9 +22,10 @@ content-type: application/json
 
 {
     "status": 0,
-    "posizione": "{{$randomInt 0 100}}",
-    "comune": "APPIGNANO",
-    "costoorario": 6
+    "posx": "{{$randomInt 0 100}}",
+    "posy": "{{$randomInt 0 100}}",
+    "comune": "montecassiano",
+    "costoorario": 6.3
 }
 ###
 
@@ -33,7 +34,7 @@ DELETE http://localhost:8080/parking/10 HTTP/1.1
 ###
 
 //get all park
-GET http://localhost:8080/parking HTTP/1.1
+GET http://192.168.43.55/parking HTTP/1.1
 ###
 //get park by id
 GET http://localhost:8080/parking/26 HTTP/1.1

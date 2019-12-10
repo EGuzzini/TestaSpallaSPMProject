@@ -20,12 +20,12 @@ exports.create = (req, res) => {
   });
 
   Parkingslot.findByPosition(ps.posx,ps.posy, (err, data) => {
+    console.log(data);
      if (data !== null) {
       res.status(404).send({
         message: `already exist a Parking with posx ${ps.posx} and posy ${ps.posy} .`
       });
     } else {
-
       // Save Customer in the database
       Parkingslot.create(ps, (err, data) => {
         if (err)
@@ -79,10 +79,15 @@ exports.update = (req, res) => {
     });
   }
   console.log(req.params.parkingId);
+  
+
   Parkingslot.updateById(
+
+
     req.params.parkingId,
     new Parkingslot(req.body),
     (err, data) => {
+      
       if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
