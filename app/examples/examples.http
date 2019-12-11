@@ -58,8 +58,8 @@ content-type: application/json
 //get all drivers
 GET http://localhost:80/users HTTP/1.1
 ###
-//get park by id
-GET http://localhost:80/users/10 HTTP/1.1
+//get driver by id
+GET http://localhost:80/users/35 HTTP/1.1
 ###
 //delete all drivers
 DELETE http://localhost:80/users HTTP/1.1
