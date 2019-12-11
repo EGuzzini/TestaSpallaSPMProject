@@ -15,7 +15,6 @@ content-type: application/json
 //home
 GET http://localhost:8080/ HTTP/1.1
 ###
-
 //update park
 PUT http://localhost:8080/parking/10 HTTP/1.1
 content-type: application/json
@@ -41,4 +40,30 @@ GET http://localhost:8080/parking/26 HTTP/1.1
 ###
 //delete all park
 DELETE http://localhost:8080/parking HTTP/1.1
+###
+
+
+//DRIVER EXAMPLE
+
+//driver registration
+POST http://localhost:80/register HTTP/1.1
+content-type: application/json
+
+{
+    "username": "william",
+    "email": "moll",
+    "password": "samuele"
+}
+###
+//get all drivers
+GET http://localhost:80/users HTTP/1.1
+###
+//get park by id
+GET http://localhost:80/users/10 HTTP/1.1
+###
+//delete all drivers
+DELETE http://localhost:80/users HTTP/1.1
+###
+//remove driver by id
+DELETE http://localhost:80/users/10 HTTP/1.1
 ###
