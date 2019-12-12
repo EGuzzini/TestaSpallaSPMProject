@@ -1,0 +1,69 @@
+
+
+//create park
+POST http://localhost:80/parking HTTP/1.1
+content-type: application/json
+
+{
+    "status": 0,
+    "posx": 81.3,
+    "posy": 66.5,
+    "comune": "montecassiano",
+    "costoorario": 6.3
+}
+###
+//home
+GET http://localhost:80/ HTTP/1.1
+###
+//update park
+PUT http://localhost:8080/parking/10 HTTP/1.1
+content-type: application/json
+
+{
+    "status": 0,
+    "posx": "{{$randomInt 0 100}}",
+    "posy": "{{$randomInt 0 100}}",
+    "comune": "montecassiano",
+    "costoorario": 6.3
+}
+###
+
+//remove park
+DELETE http://localhost:8080/parking/10 HTTP/1.1
+###
+
+//get all park
+GET http://192.168.43.55/parking HTTP/1.1
+###
+//get park by id
+GET http://localhost:8080/parking/26 HTTP/1.1
+###
+//delete all park
+DELETE http://localhost:8080/parking HTTP/1.1
+###
+
+
+//DRIVER EXAMPLE
+
+//driver registration
+POST http://localhost:80/register HTTP/1.1
+content-type: application/json
+
+{
+    "username": "Guzzo",
+    "email": "sam",
+    "password": "samuele"
+}
+###
+//get all drivers
+GET http://localhost:80/users HTTP/1.1
+###
+//get driver by id
+GET http://localhost:80/users/36 HTTP/1.1
+###
+//delete all drivers
+DELETE http://localhost:80/users HTTP/1.1
+###
+//remove driver by id
+DELETE http://localhost:80/users/10 HTTP/1.1
+###
