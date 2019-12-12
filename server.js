@@ -11,7 +11,7 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.get("/", (req, res) => {
-    res.send({ message: "Welcome to our application." });
+    res.send().status(200);
   });
 var routes = require('./app/routes/appRoutes'); //importing route
 app.use(routes); //register the route
