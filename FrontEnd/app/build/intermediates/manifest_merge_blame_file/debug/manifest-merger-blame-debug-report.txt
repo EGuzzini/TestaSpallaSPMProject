@@ -1,0 +1,156 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.smartparking"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="23"
+8-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="29" />
+9-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+11-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:5:5-79
+11-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:5:22-76
+12    <uses-permission android:name="android.permission.INTERNET" />
+12-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:6:5-67
+12-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:6:22-64
+13    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+13-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:7:5-79
+13-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:7:22-76
+14
+15    <uses-feature
+15-->[com.google.android.gms:play-services-maps:16.1.0] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\133eee48e70c205cbccaf1397687dadb\jetified-play-services-maps-16.1.0\AndroidManifest.xml:26:5-28:35
+16        android:glEsVersion="0x00020000"
+16-->[com.google.android.gms:play-services-maps:16.1.0] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\133eee48e70c205cbccaf1397687dadb\jetified-play-services-maps-16.1.0\AndroidManifest.xml:27:9-41
+17        android:required="true" />
+17-->[com.google.android.gms:play-services-maps:16.1.0] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\133eee48e70c205cbccaf1397687dadb\jetified-play-services-maps-16.1.0\AndroidManifest.xml:28:9-32
+18    <uses-feature
+18-->[com.mapbox.mapboxsdk:mapbox-android-sdk:8.5.0] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\1f11318d85e2ab9160cec89f23036f7f\jetified-mapbox-android-sdk-8.5.0\AndroidManifest.xml:12:5-14:36
+19        android:name="android.hardware.wifi"
+19-->[com.mapbox.mapboxsdk:mapbox-android-sdk:8.5.0] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\1f11318d85e2ab9160cec89f23036f7f\jetified-mapbox-android-sdk-8.5.0\AndroidManifest.xml:13:9-45
+20        android:required="false" />
+20-->[com.mapbox.mapboxsdk:mapbox-android-sdk:8.5.0] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\1f11318d85e2ab9160cec89f23036f7f\jetified-mapbox-android-sdk-8.5.0\AndroidManifest.xml:14:9-33
+21
+22    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- Required for CrashReporterJobIntentService on API levels below 25 -->
+22-->[com.mapbox.mapboxsdk:mapbox-android-sdk:8.5.0] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\1f11318d85e2ab9160cec89f23036f7f\jetified-mapbox-android-sdk-8.5.0\AndroidManifest.xml:18:5-76
+22-->[com.mapbox.mapboxsdk:mapbox-android-sdk:8.5.0] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\1f11318d85e2ab9160cec89f23036f7f\jetified-mapbox-android-sdk-8.5.0\AndroidManifest.xml:18:22-73
+23    <uses-permission android:name="android.permission.WAKE_LOCK" />
+23-->[com.mapbox.mapboxsdk:mapbox-android-telemetry:4.5.1] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\7160007d248ea06ed9bc81848025fe41\jetified-mapbox-android-telemetry-4.5.1\AndroidManifest.xml:12:5-68
+23-->[com.mapbox.mapboxsdk:mapbox-android-telemetry:4.5.1] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\7160007d248ea06ed9bc81848025fe41\jetified-mapbox-android-telemetry-4.5.1\AndroidManifest.xml:12:22-65
+24
+25    <application
+25-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:9:5-35:19
+26        android:allowBackup="true"
+26-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:10:9-35
+27        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+27-->[androidx.core:core:1.1.0] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\61a4322994bff311c55a1e748aab7916\core-1.1.0\AndroidManifest.xml:24:18-86
+28        android:debuggable="true"
+29        android:icon="@mipmap/ic_launcher"
+29-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:11:9-43
+30        android:label="@string/app_name"
+30-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:12:9-41
+31        android:roundIcon="@mipmap/ic_launcher_round"
+31-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:13:9-54
+32        android:supportsRtl="true"
+32-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:14:9-35
+33        android:testOnly="true"
+34        android:theme="@style/AppTheme"
+34-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:15:9-40
+35        android:usesCleartextTraffic="true" >
+35-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:16:9-44
+36        <activity android:name="com.example.smartparking.RegisterActivity" />
+36-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:17:9-63
+36-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:17:19-51
+37        <activity android:name="com.example.smartparking.AddParkingActivity" />
+37-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:18:9-56
+37-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:18:19-53
+38        <activity
+38-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:19:9-22:59
+39            android:name="com.example.smartparking.ParkingActivity"
+39-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:20:13-44
+40            android:label="@string/title_activity_parking"
+40-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:21:13-59
+41            android:theme="@style/AppTheme.NoActionBar" />
+41-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:22:13-56
+42        <activity android:name="com.example.smartparking.MapActivity" />
+42-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:23:9-49
+42-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:23:19-46
+43        <activity android:name="com.example.smartparking.MainActivity" >
+43-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:24:9-30:20
+43-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:24:19-47
+44            <intent-filter>
+44-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:25:13-29:29
+45                <action android:name="android.intent.action.MAIN" />
+45-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:26:17-69
+45-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:26:25-66
+46
+47                <category android:name="android.intent.category.LAUNCHER" />
+47-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:28:17-77
+47-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:28:27-74
+48            </intent-filter>
+49        </activity>
+50        <activity
+50-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:31:9-34:59
+51            android:name="com.example.smartparking.LoginActivity"
+51-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:32:13-42
+52            android:label="activity_login"
+52-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:33:13-43
+53            android:theme="@style/AppTheme.NoActionBar" />
+53-->C:\Users\xpush\Desktop\Universita\TestaSpallaSPMProject\FrontEnd\app\src\main\AndroidManifest.xml:34:13-56
+54        <!-- Needs to be explicitly declared on P+ -->
+55        <uses-library
+55-->[com.google.android.gms:play-services-maps:16.1.0] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\133eee48e70c205cbccaf1397687dadb\jetified-play-services-maps-16.1.0\AndroidManifest.xml:33:9-35:40
+56            android:name="org.apache.http.legacy"
+56-->[com.google.android.gms:play-services-maps:16.1.0] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\133eee48e70c205cbccaf1397687dadb\jetified-play-services-maps-16.1.0\AndroidManifest.xml:34:13-50
+57            android:required="false" />
+57-->[com.google.android.gms:play-services-maps:16.1.0] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\133eee48e70c205cbccaf1397687dadb\jetified-play-services-maps-16.1.0\AndroidManifest.xml:35:13-37
+58
+59        <activity
+59-->[com.google.android.gms:play-services-base:16.0.1] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\380ccba388f74414d3c6429d9a3a48e6\jetified-play-services-base-16.0.1\AndroidManifest.xml:23:9-26:75
+60            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+60-->[com.google.android.gms:play-services-base:16.0.1] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\380ccba388f74414d3c6429d9a3a48e6\jetified-play-services-base-16.0.1\AndroidManifest.xml:24:13-79
+61            android:exported="false"
+61-->[com.google.android.gms:play-services-base:16.0.1] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\380ccba388f74414d3c6429d9a3a48e6\jetified-play-services-base-16.0.1\AndroidManifest.xml:25:13-37
+62            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+62-->[com.google.android.gms:play-services-base:16.0.1] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\380ccba388f74414d3c6429d9a3a48e6\jetified-play-services-base-16.0.1\AndroidManifest.xml:26:13-72
+63
+64        <meta-data
+64-->[com.google.android.gms:play-services-basement:16.0.1] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\bc42c8feebb14ad53068d5e8d21d009f\jetified-play-services-basement-16.0.1\AndroidManifest.xml:23:9-25:69
+65            android:name="com.google.android.gms.version"
+65-->[com.google.android.gms:play-services-basement:16.0.1] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\bc42c8feebb14ad53068d5e8d21d009f\jetified-play-services-basement-16.0.1\AndroidManifest.xml:24:13-58
+66            android:value="@integer/google_play_services_version" />
+66-->[com.google.android.gms:play-services-basement:16.0.1] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\bc42c8feebb14ad53068d5e8d21d009f\jetified-play-services-basement-16.0.1\AndroidManifest.xml:25:13-66
+67
+68        <provider
+68-->[com.mapbox.mapboxsdk:mapbox-android-telemetry:4.5.1] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\7160007d248ea06ed9bc81848025fe41\jetified-mapbox-android-telemetry-4.5.1\AndroidManifest.xml:19:9-23:39
+69            android:name="com.mapbox.android.telemetry.provider.MapboxTelemetryInitProvider"
+69-->[com.mapbox.mapboxsdk:mapbox-android-telemetry:4.5.1] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\7160007d248ea06ed9bc81848025fe41\jetified-mapbox-android-telemetry-4.5.1\AndroidManifest.xml:20:13-93
+70            android:authorities="com.example.smartparking.mapboxtelemetryinitprovider"
+70-->[com.mapbox.mapboxsdk:mapbox-android-telemetry:4.5.1] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\7160007d248ea06ed9bc81848025fe41\jetified-mapbox-android-telemetry-4.5.1\AndroidManifest.xml:21:13-79
+71            android:exported="false"
+71-->[com.mapbox.mapboxsdk:mapbox-android-telemetry:4.5.1] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\7160007d248ea06ed9bc81848025fe41\jetified-mapbox-android-telemetry-4.5.1\AndroidManifest.xml:22:13-37
+72            android:initOrder="100" />
+72-->[com.mapbox.mapboxsdk:mapbox-android-telemetry:4.5.1] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\7160007d248ea06ed9bc81848025fe41\jetified-mapbox-android-telemetry-4.5.1\AndroidManifest.xml:23:13-36
+73
+74        <service
+74-->[com.mapbox.mapboxsdk:mapbox-android-telemetry:4.5.1] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\7160007d248ea06ed9bc81848025fe41\jetified-mapbox-android-telemetry-4.5.1\AndroidManifest.xml:25:9-27:72
+75            android:name="com.mapbox.android.telemetry.crash.CrashReporterJobIntentService"
+75-->[com.mapbox.mapboxsdk:mapbox-android-telemetry:4.5.1] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\7160007d248ea06ed9bc81848025fe41\jetified-mapbox-android-telemetry-4.5.1\AndroidManifest.xml:26:13-92
+76            android:permission="android.permission.BIND_JOB_SERVICE" />
+76-->[com.mapbox.mapboxsdk:mapbox-android-telemetry:4.5.1] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\7160007d248ea06ed9bc81848025fe41\jetified-mapbox-android-telemetry-4.5.1\AndroidManifest.xml:27:13-69
+77
+78        <provider
+78-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\b8598ef68fae23fbfd110c9c5e1bd9ce\lifecycle-process-2.0.0\AndroidManifest.xml:23:9-27:43
+79            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
+79-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\b8598ef68fae23fbfd110c9c5e1bd9ce\lifecycle-process-2.0.0\AndroidManifest.xml:24:13-79
+80            android:authorities="com.example.smartparking.lifecycle-process"
+80-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\b8598ef68fae23fbfd110c9c5e1bd9ce\lifecycle-process-2.0.0\AndroidManifest.xml:25:13-69
+81            android:exported="false"
+81-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\b8598ef68fae23fbfd110c9c5e1bd9ce\lifecycle-process-2.0.0\AndroidManifest.xml:26:13-37
+82            android:multiprocess="true" />
+82-->[androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\xpush\.gradle\caches\transforms-2\files-2.1\b8598ef68fae23fbfd110c9c5e1bd9ce\lifecycle-process-2.0.0\AndroidManifest.xml:27:13-40
+83    </application>
+84
+85</manifest>
