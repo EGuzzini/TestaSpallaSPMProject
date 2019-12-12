@@ -4,9 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.StrictMode
 import android.util.Log
-import android.widget.TextView
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_add_parking.*
 import kotlinx.android.synthetic.main.activity_register.*
 import java.io.*
 import java.net.HttpURLConnection
@@ -22,8 +20,7 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(R.layout.activity_register)
         val policy =
             StrictMode.ThreadPolicy.Builder().permitAll().build()
-            StrictMode.setThreadPolicy(policy)
-
+        StrictMode.setThreadPolicy(policy)
         register_button.setOnClickListener {
             var email = email_register.text.toString()
             var username = username_register.text.toString()
@@ -45,12 +42,15 @@ class RegisterActivity : AppCompatActivity() {
                         if (i != 0) {
                             sbParams.append("&")
                         }
-                        sbParams.append(key).append("=").append(URLEncoder.encode(params[key], "UTF-8"))
-                    } catch (e: UnsupportedEncodingException) { e.printStackTrace() }
+                        sbParams.append(key).append("=")
+                            .append(URLEncoder.encode(params[key], "UTF-8"))
+                    } catch (e: UnsupportedEncodingException) {
+                        e.printStackTrace()
+                    }
                     i++
                 }
                 try {
-                    val url = "http://0893b19e.ngrok.io"
+                    val url = getString(R.string.connection) + "register"
                     val urlObj = URL(url)
                     val conn = urlObj.openConnection() as HttpURLConnection
                     conn.doOutput = true
@@ -69,14 +69,21 @@ class RegisterActivity : AppCompatActivity() {
                         val reader = BufferedReader(InputStreamReader(`in`))
                         val result = StringBuilder()
                         var line: String?
-                        while (reader.readLine().also { line = it } != null) { result.append(line) }
-                        Log.d("test", "result from server: $result")
-                    } catch (e: IOException) { e.printStackTrace() } finally { conn?.disconnect() }
-                } catch (e: java.io.IOException) { e.printStackTrace() }
-            }
-            else
-            {
-                Toast.makeText(this, "Password not matching, please check", Toast.LENGTH_SHORT).show()
+                        while (reader.readLine().also { line = it } != null) {
+                            result.append(line)
+                        }
+                        Log.d("test", "result from server: ${conn.responseCode}")
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    } finally {
+                        conn.disconnect()
+                    }
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            } else {
+                Toast.makeText(this, "Password not matching, please check", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }

@@ -26,7 +26,6 @@ class AddParkingActivity : AppCompatActivity() {
         val policy =
             StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
-
         add_button.setOnClickListener {
             var posxtext = posx_textbox.text.toString()
             var posytext = posy_text.text.toString()
@@ -34,11 +33,11 @@ class AddParkingActivity : AppCompatActivity() {
             var pricetext = price_textbox.text.toString()
             val textView = findViewById<TextView>(R.id.text)
             val params: HashMap<String, String> =
-                object  : HashMap<String, String>() {
+                object : HashMap<String, String>() {
                     init {
                         put("status", "0")
                         put("posx", posxtext)
-                        put("posy", posytext )
+                        put("posy", posytext)
                         put("comune", municipalitytext)
                         put("costoorario", pricetext)
                     }
@@ -58,7 +57,7 @@ class AddParkingActivity : AppCompatActivity() {
                 i++
             }
             try {
-                val url = "http://0893b19e.ngrok.io/parking"
+                val url = getString(R.string.connection) + "parking"
                 val urlObj = URL(url)
                 val conn = urlObj.openConnection() as HttpURLConnection
                 conn.doOutput = true
@@ -84,11 +83,11 @@ class AddParkingActivity : AppCompatActivity() {
                 } catch (e: IOException) {
                     e.printStackTrace()
                 } finally {
-                    conn?.disconnect()
+                    conn.disconnect()
                 }
-            }catch (  e:java.io.IOException){
+            } catch (e: IOException) {
                 e.printStackTrace()
             }
-            }
-         }
+        }
     }
+}
