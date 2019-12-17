@@ -41,6 +41,9 @@ class MainActivity : AppCompatActivity() {
             startActivity(mySuperIntent)
             finish()
         } else {
+            val mySuperIntent = Intent(this@MainActivity, LoginActivity::class.java)
+            startActivity(mySuperIntent)
+            finish()
             Toast.makeText(this, "Connessione al server fallita.", Toast.LENGTH_SHORT).show()
         }
     }

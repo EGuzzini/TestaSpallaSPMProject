@@ -20,7 +20,8 @@
             android:name=".ParkingActivity"
             android:label="@string/title_activity_parking"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MapActivity" />
+        <activity android:name=".MapActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

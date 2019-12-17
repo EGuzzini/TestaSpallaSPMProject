@@ -94,7 +94,7 @@ class LoginActivity : AppCompatActivity() {
                 }
 
             }
-            val mapact = Intent(this, ParkingActivity::class.java)
+            val mapact = Intent(this, MapActivity::class.java)
             startActivity(mapact)
         }
         RegisterHereText.setOnClickListener {
