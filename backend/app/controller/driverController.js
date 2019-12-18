@@ -59,24 +59,24 @@ exports.login = (req, res) => {
   }
   let getDriver;
   
-  Driver.findByEmailOrUsername(req.body.email, req.body.username, (err, driver) => {
+  Driver.findByEmailOrUsername(req.body.username, (err, driver) => {
     console.log(req.body.username+ "   username ");
     if (!driver) {
       return res.status(401).json({
-        message: "Authentication failed porcodi"
+        message: "Authentication failed"
       });
     }
     getDriver = driver;
     return bcrypt.compare(req.body.password, driver.password, (err,response) => {
       if (!response) {
-        return res.status(401).json({
-          message: "Authentication failed"
-        });
+        return res.status(401).json({error:"Authentication failed"}
+        );
       }
       console.log(response);
       let jwtToken = jwt.sign({
         email: getDriver.email,
-        driverId: getDriver.driverId
+        driverId: getDriver.driverId,
+        admin:false
       }, config.secret, {
         expiresIn: "1h"
       });

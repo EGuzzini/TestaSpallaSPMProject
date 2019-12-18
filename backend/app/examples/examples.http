@@ -3,11 +3,12 @@
 //create park
 POST http://localhost:80/parking HTTP/1.1
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImFkbWluIjpmYWxzZSwiaWF0IjoxNTc2Njg2MDcwLCJleHAiOjE1NzY2ODk2NzB9.Imq7QCT8wiX3Saxt2xtFJkmbei9_w4MoFcsk55wv_b0
 
 {
     "status": 0,
-    "posx": 81.3,
-    "posy": 66.5,
+    "posx": 13.7,
+    "posy": 64.1,
     "comune": "montecassiano",
     "costoorario": 6.3
 }

@@ -2,7 +2,14 @@
 const Parkingslot = require("../models/parkingModels.js");
 
 exports.create = (req, res) => {
-  console.log("req.headers:  "+req.header('Authorization'));
+
+  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
+  if(req.decoded.admin==false){
+    return res.status(401);
+  }
+  */
+  console.log(req.decoded.iat+" admin");
+  console.log("req.headers:  " + req.header('Authorization'));
   // Validate request
   if (!req.body) {
     res.status(400).send({
@@ -19,9 +26,9 @@ exports.create = (req, res) => {
     costoorario: req.body.costoorario
   });
 
-  Parkingslot.findByPosition(ps.posx,ps.posy, (err, data) => {
+  Parkingslot.findByPosition(ps.posx, ps.posy, (err, data) => {
     console.log(data);
-     if (data !== null) {
+    if (data !== null) {
       res.status(404).send({
         message: `already exist a Parking with posx ${ps.posx} and posy ${ps.posy} .`
       });
@@ -79,7 +86,7 @@ exports.update = (req, res) => {
     });
   }
   console.log(req.params.parkingId);
-  
+
 
   Parkingslot.updateById(
 
@@ -87,7 +94,7 @@ exports.update = (req, res) => {
     req.params.parkingId,
     new Parkingslot(req.body),
     (err, data) => {
-      
+
       if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
