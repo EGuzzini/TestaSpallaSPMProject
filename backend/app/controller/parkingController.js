@@ -2,7 +2,7 @@
 const Parkingslot = require("../models/parkingModels.js");
 
 exports.create = (req, res) => {
-
+  console.log("req.headers:  "+req.header('Authorization'));
   // Validate request
   if (!req.body) {
     res.status(400).send({

@@ -1,9 +1,11 @@
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const Driver = require("../models/driverModel.js");
+const jwt = require("jsonwebtoken");
+const config=require("../../config.js")
 
-let passwordhash = "";
 exports.create = (req, res) => {
+  console.log("req body :  "+req.body.username);
   // Validate request
   if (!req.body) {
     res.status(400).send({
@@ -46,10 +48,45 @@ exports.create = (req, res) => {
     }
   })
 
-
-
-
 };
+
+
+exports.login = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+  let getDriver;
+  
+  Driver.findByEmailOrUsername(req.body.email, req.body.username, (err, driver) => {
+    console.log(req.body.username+ "   username ");
+    if (!driver) {
+      return res.status(401).json({
+        message: "Authentication failed porcodi"
+      });
+    }
+    getDriver = driver;
+    return bcrypt.compare(req.body.password, driver.password, (err,response) => {
+      if (!response) {
+        return res.status(401).json({
+          message: "Authentication failed"
+        });
+      }
+      console.log(response);
+      let jwtToken = jwt.sign({
+        email: getDriver.email,
+        driverId: getDriver.driverId
+      }, config.secret, {
+        expiresIn: "1h"
+      });
+      res.status(200).json({
+        jwtToken        
+      });
+    })
+  });
+}
+
 exports.findAll = (req, res) => {
   Driver.getAll((err, data) => {
     if (err)
