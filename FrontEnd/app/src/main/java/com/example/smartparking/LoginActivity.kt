@@ -37,65 +37,67 @@ class LoginActivity : AppCompatActivity() {
                 StrictMode.ThreadPolicy.Builder().permitAll().build()
             StrictMode.setThreadPolicy(policy)
             login_button.setOnClickListener {
-                var usernamelogin = username_login.text.toString()
-                var passwordlogin = password_login.text.toString()
-                val params: HashMap<String, String> =
-                    object : HashMap<String, String>() {
-                        init {
-                            put("username", usernamelogin)
-                            put("password", passwordlogin)
+                var username = username_login.text.toString()
+                var password = password_login.text.toString()
+
+                    val params: HashMap<String, String> =
+                        object : HashMap<String, String>() {
+                            init {
+                                put("email", "sam")
+                                put("username", username)
+                                put("password", password)
+                            }
                         }
+                    val sbParams = java.lang.StringBuilder()
+                    var i = 0
+                    for (key in params.keys) {
+                        try {
+                            if (i != 0) {
+                                sbParams.append("&")
+                            }
+                            sbParams.append(key).append("=")
+                                .append(URLEncoder.encode(params[key], "UTF-8"))
+                        } catch (e: UnsupportedEncodingException) {
+                            e.printStackTrace()
+                        }
+                        i++
                     }
-                val sbParams = java.lang.StringBuilder()
-                var i = 0
-                for (key in params.keys) {
                     try {
-                        if (i != 0) {
-                            sbParams.append("&")
+                        val url = getString(R.string.connection) + "login"
+                        val urlObj = URL(url)
+                        val conn = urlObj.openConnection() as HttpURLConnection
+                        conn.doOutput = true
+                        conn.requestMethod = "POST"
+                        conn.setRequestProperty("Accept-Charset", "UTF-8")
+                        conn.readTimeout = 1500
+                        conn.connectTimeout = 3000
+                        conn.connect()
+                        val paramsString: String = sbParams.toString()
+                        val wr = DataOutputStream(conn.outputStream)
+                        wr.writeBytes(paramsString)
+                        wr.flush()
+                        wr.close()
+                        try {
+                            val `in`: InputStream = BufferedInputStream(conn.inputStream)
+                            val reader = BufferedReader(InputStreamReader(`in`))
+                            val result = StringBuilder()
+                            var line: String?
+                            while (reader.readLine().also { line = it } != null) {
+                                result.append(line)
+                            }
+                            Log.d("test", "result from server: $result")
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        } finally {
+                            conn.disconnect()
                         }
-                        sbParams.append(key).append("=")
-                            .append(URLEncoder.encode(params[key], "UTF-8"))
-                    } catch (e: UnsupportedEncodingException) {
-                        e.printStackTrace()
-                    }
-                    i++
-                }
-                try {
-                    val url = getString(R.string.connection) + "login"
-                    val urlObj = URL(url)
-                    val conn = urlObj.openConnection() as HttpURLConnection
-                    conn.doOutput = true
-                    conn.requestMethod = "POST"
-                    conn.setRequestProperty("Accept-Charset", "UTF-8")
-                    conn.readTimeout = 1500
-                    conn.connectTimeout = 3000
-                    conn.connect()
-                    val paramsString: String = sbParams.toString()
-                    val wr = DataOutputStream(conn.outputStream)
-                    wr.writeBytes(paramsString)
-                    wr.flush()
-                    wr.close()
-                    try {
-                        val `in`: InputStream = BufferedInputStream(conn.inputStream)
-                        val reader = BufferedReader(InputStreamReader(`in`))
-                        val result = StringBuilder()
-                        var line: String?
-                        while (reader.readLine().also { line = it } != null) {
-                            result.append(line)
-                        }
-                        Log.d("test", "result from server: $result")
                     } catch (e: IOException) {
                         e.printStackTrace()
-                    } finally {
-                        conn.disconnect()
                     }
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
 
             }
-            val mapact = Intent(this, MapActivity::class.java)
-            startActivity(mapact)
+            //val mapact = Intent(this, MapActivity::class.java)
+           //startActivity(mapact)
         }
         RegisterHereText.setOnClickListener {
             val regact = Intent(this, RegisterActivity::class.java)
