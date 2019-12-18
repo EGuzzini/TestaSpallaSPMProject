@@ -1,10 +1,10 @@
 package com.example.smartparking
 
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.StrictMode
-import android.util.Log
-import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_add_parking.*
 import org.json.JSONArray
@@ -19,27 +19,25 @@ operator fun JSONArray.iterator(): Iterator<JSONObject> =
     (0 until length()).asSequence().map { get(it) as JSONObject }.iterator()
 
 class AddParkingActivity : AppCompatActivity() {
-
+    private var prefs: SharedPreferences? = null
+    private val prefsname = "com.example.smartparking.prefs"
     override fun onCreate(savedInstanceState: Bundle?) {
+        prefs = this.getSharedPreferences(prefsname, 0)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_parking)
         val policy =
             StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
         add_button.setOnClickListener {
-            var posxtext = posx_textbox.text.toString()
-            var posytext = posy_text.text.toString()
-            var municipalitytext = municipality_textbox.text.toString()
-            var pricetext = price_textbox.text.toString()
-            val textView = findViewById<TextView>(R.id.text)
             val params: HashMap<String, String> =
                 object : HashMap<String, String>() {
                     init {
                         put("status", "0")
-                        put("posx", posxtext)
-                        put("posy", posytext)
-                        put("comune", municipalitytext)
-                        put("costoorario", pricetext)
+                        put("posx", posx_textbox.text.toString())
+                        put("posy", posy_text.text.toString())
+                        put("comune", municipality_textbox.text.toString())
+                        put("costoorario", price_textbox.text.toString())
                     }
                 }
             val sbParams = java.lang.StringBuilder()
@@ -60,6 +58,8 @@ class AddParkingActivity : AppCompatActivity() {
                 val url = getString(R.string.connection) + "parking"
                 val urlObj = URL(url)
                 val conn = urlObj.openConnection() as HttpURLConnection
+                val tokenget = prefs!!.getString("token", "defvalue")
+                conn.setRequestProperty("Authorization", "Bearer $tokenget")
                 conn.doOutput = true
                 conn.requestMethod = "POST"
                 conn.setRequestProperty("Accept-Charset", "UTF-8")
@@ -71,19 +71,23 @@ class AddParkingActivity : AppCompatActivity() {
                 wr.writeBytes(paramsString)
                 wr.flush()
                 wr.close()
-                try {
-                    val `in`: InputStream = BufferedInputStream(conn.inputStream)
-                    val reader = BufferedReader(InputStreamReader(`in`))
-                    val result = StringBuilder()
-                    var line: String?
-                    while (reader.readLine().also { line = it } != null) {
-                        result.append(line)
+                if (conn.responseCode == 200) {
+                    try {
+                        val `in`: InputStream = BufferedInputStream(conn.inputStream)
+                        val reader = BufferedReader(InputStreamReader(`in`))
+                        val result = StringBuilder()
+                        var line: String?
+                        while (reader.readLine().also { line = it } != null) {
+                            result.append(line)
+                        }
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    } finally {
+                        conn.disconnect()
                     }
-                    Log.d("test", "result from server: $result")
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                } finally {
-                    conn.disconnect()
+                } else {
+                    Toast.makeText(this, "Aggiunta del parcheggio fallita", Toast.LENGTH_SHORT)
+                        .show()
                 }
             } catch (e: IOException) {
                 e.printStackTrace()

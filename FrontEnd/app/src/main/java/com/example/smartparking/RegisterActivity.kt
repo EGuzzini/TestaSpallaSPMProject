@@ -3,7 +3,6 @@ package com.example.smartparking
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.StrictMode
-import android.util.Log
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_register.*
 import java.io.*
@@ -22,17 +21,13 @@ class RegisterActivity : AppCompatActivity() {
             StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
         register_button.setOnClickListener {
-            var email = email_register.text.toString()
-            var username = username_register.text.toString()
-            var password = password_register.text.toString()
-            var repassword = repassword_register.text.toString()
-            if (password == repassword) {
+            if (password_register.text.toString() == repassword_register.text.toString()) {
                 val params: HashMap<String, String> =
                     object : HashMap<String, String>() {
                         init {
-                            put("email", email)
-                            put("username", username)
-                            put("password", password)
+                            put("email", email_register.text.toString())
+                            put("username", username_register.text.toString())
+                            put("password", password_register.text.toString())
                         }
                     }
                 val sbParams = java.lang.StringBuilder()
@@ -72,7 +67,6 @@ class RegisterActivity : AppCompatActivity() {
                         while (reader.readLine().also { line = it } != null) {
                             result.append(line)
                         }
-                        Log.d("test", "result from server: ${conn.responseCode}")
                     } catch (e: IOException) {
                         e.printStackTrace()
                     } finally {

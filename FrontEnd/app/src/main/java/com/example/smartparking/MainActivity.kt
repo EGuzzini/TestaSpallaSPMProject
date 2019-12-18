@@ -3,7 +3,6 @@ package com.example.smartparking
 import android.content.Intent
 import android.os.Bundle
 import android.os.StrictMode
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import java.io.BufferedReader
@@ -24,12 +23,8 @@ class MainActivity : AppCompatActivity() {
         val urlObj = URL(url)
 
         val conn = urlObj.openConnection() as HttpURLConnection
-        Log.d("HTTP-GET", "conn ${conn.responseCode}")
         try {
-            val br =
-                BufferedReader(InputStreamReader(conn.inputStream))
-            val line = br.readLine()
-            Log.d("HTTP-GET", "conn $line")
+            BufferedReader(InputStreamReader(conn.inputStream))
         } catch (e: IOException) {
             e.printStackTrace()
         } finally {

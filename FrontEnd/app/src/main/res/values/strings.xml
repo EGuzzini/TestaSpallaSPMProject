@@ -8,4 +8,5 @@
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_m">MActivity</string>
     <string name="connection">http://f29d308e.ngrok.io/</string>
+    <string name="Request_OK">200</string>
 </resources>
