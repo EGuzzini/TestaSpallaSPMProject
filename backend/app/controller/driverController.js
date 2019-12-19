@@ -2,10 +2,18 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const Driver = require("../models/driverModel.js");
 const jwt = require("jsonwebtoken");
-const config=require("../../config.js")
+const config = require("../../config.js")
+
+
+exports.checkTokenInit =(req,res) =>{
+  console.log("req.headers:  " + req.header('Authorization'));
+  //significa che il token è valido all'apertura dell'app
+  return res.send().status(200);
+}
+
 
 exports.create = (req, res) => {
-  console.log("req body :  "+req.body.username);
+  console.log("req body :  " + req.body.username);
   // Validate request
   if (!req.body) {
     res.status(400).send({
@@ -58,30 +66,29 @@ exports.login = (req, res) => {
     });
   }
   let getDriver;
-  
   Driver.findByEmailOrUsername(req.body.username, (err, driver) => {
-    console.log(req.body.username+ "   username ");
+    console.log(req.body.username + "   username ");
     if (!driver) {
       return res.status(401).json({
         message: "Authentication failed"
       });
     }
     getDriver = driver;
-    return bcrypt.compare(req.body.password, driver.password, (err,response) => {
+    return bcrypt.compare(req.body.password, driver.password, (err, response) => {
       if (!response) {
-        return res.status(401).json({error:"Authentication failed"}
+        return res.status(401).json({ error: "Authentication failed" }
         );
       }
       console.log(response);
       let jwtToken = jwt.sign({
         email: getDriver.email,
         driverId: getDriver.driverId,
-        admin:false
+        admin: false
       }, config.secret, {
-        expiresIn: "1h"
+        expiresIn: "20m"
       });
       res.status(200).json({
-        jwtToken        
+        jwtToken
       });
     })
   });
@@ -99,6 +106,11 @@ exports.findAll = (req, res) => {
 };
 
 exports.findOne = (req, res) => {
+  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
+  if(req.decoded.admin==false){
+    return res.status(401);
+  }
+  */
   Driver.findById(req.params.driverId, (err, data) => {
 
     console.log(req.params.driverId + " driver id");
@@ -117,6 +129,11 @@ exports.findOne = (req, res) => {
 };
 
 exports.update = (req, res) => {
+  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
+  if(req.decoded.admin==false){
+    return res.status(401);
+  }
+  */
   // Validate Request
   if (!req.body) {
     res.status(400).send({
@@ -149,6 +166,11 @@ exports.update = (req, res) => {
 };
 
 exports.delete = (req, res) => {
+  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
+  if(req.decoded.admin==false){
+    return res.status(401);
+  }
+  */
   Driver.remove(req.params.driverId, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
@@ -165,6 +187,11 @@ exports.delete = (req, res) => {
 };
 
 exports.deleteAll = (req, res) => {
+  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
+  if(req.decoded.admin==false){
+    return res.status(401);
+  }
+  */
   Driver.removeAll((err, data) => {
     if (err)
       res.status(500).send({

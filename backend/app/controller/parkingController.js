@@ -49,6 +49,11 @@ exports.create = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
+  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
+  if(req.decoded.admin==false){
+    return res.status(401);
+  }
+  */
   Parkingslot.getAll((err, data) => {
     if (err)
       res.status(500).send({
@@ -60,6 +65,11 @@ exports.findAll = (req, res) => {
 };
 
 exports.findOne = (req, res) => {
+  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
+  if(req.decoded.admin==false){
+    return res.status(401);
+  }
+  */
   Parkingslot.findById(req.params.parkingId, (err, data) => {
 
     console.log(req.params.parkingId + " parking id");
@@ -79,6 +89,11 @@ exports.findOne = (req, res) => {
 
 
 exports.update = (req, res) => {
+  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
+  if(req.decoded.admin==false){
+    return res.status(401);
+  }
+  */
   // Validate Request
   if (!req.body) {
     res.status(400).send({
@@ -111,6 +126,11 @@ exports.update = (req, res) => {
 };
 
 exports.delete = (req, res) => {
+  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
+  if(req.decoded.admin==false){
+    return res.status(401);
+  }
+  */
   Parkingslot.remove(req.params.parkingId, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
@@ -127,6 +147,11 @@ exports.delete = (req, res) => {
 };
 
 exports.deleteAll = (req, res) => {
+  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
+  if(req.decoded.admin==false){
+    return res.status(401);
+  }
+  */
   Parkingslot.removeAll((err, data) => {
     if (err)
       res.status(500).send({
