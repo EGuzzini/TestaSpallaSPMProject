@@ -21,7 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        android:backgroundTint="@color/colorPrimary"
+        android:background="#0aa891"
+        android:backgroundTint="#0aa891"
         android:src="@drawable/ic_action_searc"
-        android:tint="@android:color/white" />
+        mapbox:backgroundTint="#0aa891" />
 </FrameLayout>

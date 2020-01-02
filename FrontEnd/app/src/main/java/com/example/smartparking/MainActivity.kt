@@ -1,6 +1,7 @@
 package com.example.smartparking
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.StrictMode
 import android.widget.Toast
@@ -13,7 +14,10 @@ import java.net.URL
 
 
 class MainActivity : AppCompatActivity() {
+    private var prefs: SharedPreferences? = null
+    private val prefsname = "com.example.smartparking.prefs"
     override fun onCreate(savedInstanceState: Bundle?) {
+        prefs = this.getSharedPreferences(prefsname, 0)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val policy =
@@ -23,23 +27,27 @@ class MainActivity : AppCompatActivity() {
         val urlObj = URL(url)
 
         val conn = urlObj.openConnection() as HttpURLConnection
+        val tokenget = prefs!!.getString("token", "defvalue")
+        conn.setRequestProperty("Authorization", "Bearer $tokenget")
+        conn.connect()
         try {
             BufferedReader(InputStreamReader(conn.inputStream))
         } catch (e: IOException) {
             e.printStackTrace()
         } finally {
+            if (conn.responseCode == 200) {
+                val mySuperIntent = Intent(this@MainActivity, MapActivity::class.java)
+                startActivity(mySuperIntent)
+                finish()
+            } else {
+                val mySuperIntent = Intent(this@MainActivity, LoginActivity::class.java)
+                startActivity(mySuperIntent)
+                finish()
+            }
             conn.disconnect()
+
+
         }
 
-        if (conn.responseCode == 200) {
-            val mySuperIntent = Intent(this@MainActivity, LoginActivity::class.java)
-            startActivity(mySuperIntent)
-            finish()
-        } else {
-            val mySuperIntent = Intent(this@MainActivity, LoginActivity::class.java)
-            startActivity(mySuperIntent)
-            finish()
-            Toast.makeText(this, "Connessione al server fallita.", Toast.LENGTH_SHORT).show()
-        }
     }
 }

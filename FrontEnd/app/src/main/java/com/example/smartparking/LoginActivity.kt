@@ -101,7 +101,7 @@ class LoginActivity : AppCompatActivity() {
                             e.printStackTrace()
                         } finally {
                             conn.disconnect()
-                            val mapact = Intent(this, ParkingActivity::class.java)
+                            val mapact = Intent(this, MapActivity::class.java)
                             startActivity(mapact)
                         }
                     } else {
