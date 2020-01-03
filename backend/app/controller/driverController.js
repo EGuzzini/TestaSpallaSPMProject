@@ -3,6 +3,7 @@ const saltRounds = 10;
 const Driver = require("../models/driverModel.js");
 const jwt = require("jsonwebtoken");
 const config = require("../../config.js")
+<<<<<<< HEAD
 
 exports.create = (req, res) => {
     console.log("req body :  " + req.body.username);
@@ -13,6 +14,30 @@ exports.create = (req, res) => {
         });
     }
     bcrypt.genSalt(saltRounds, function(err, salt) {
+=======
+
+
+exports.checkTokenInit =(req,res) =>{
+  console.log("req.headers:  " + req.header('Authorization'));
+  //significa che il token è valido all'apertura dell'app
+  return res.send().status(200);
+}
+
+
+exports.create = (req, res) => {
+  console.log("req body :  " + req.body.username);
+  // Validate request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+  bcrypt.genSalt(saltRounds, function (err, salt) {
+    if (err) {
+      throw err
+    } else {
+      bcrypt.hash(req.body.password, salt, function (err, hash) {
+>>>>>>> DB-SERVER-API
         if (err) {
             throw err
         } else {
@@ -51,6 +76,7 @@ exports.create = (req, res) => {
 
 
 exports.login = (req, res) => {
+<<<<<<< HEAD
     if (!req.body) {
         res.status(400).send({
             message: "Content can not be empty!"
@@ -84,6 +110,40 @@ exports.login = (req, res) => {
             });
         })
     });
+=======
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+  let getDriver;
+  Driver.findByEmailOrUsername(req.body.username, (err, driver) => {
+    console.log(req.body.username + "   username ");
+    if (!driver) {
+      return res.status(401).json({
+        message: "Authentication failed"
+      });
+    }
+    getDriver = driver;
+    return bcrypt.compare(req.body.password, driver.password, (err, response) => {
+      if (!response) {
+        return res.status(401).json({ error: "Authentication failed" }
+        );
+      }
+      console.log(response);
+      let jwtToken = jwt.sign({
+        email: getDriver.email,
+        driverId: getDriver.driverId,
+        admin: false
+      }, config.secret, {
+        expiresIn: "20m"
+      });
+      res.status(200).json({
+        jwtToken
+      });
+    })
+  });
+>>>>>>> DB-SERVER-API
 }
 
 exports.findAll = (req, res) => {
@@ -97,7 +157,16 @@ exports.findAll = (req, res) => {
 };
 
 exports.findOne = (req, res) => {
+<<<<<<< HEAD
     Driver.findById(req.params.driverId, (err, data) => {
+=======
+  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
+  if(req.decoded.admin==false){
+    return res.status(401);
+  }
+  */
+  Driver.findById(req.params.driverId, (err, data) => {
+>>>>>>> DB-SERVER-API
 
         console.log(req.params.driverId + " driver id");
         if (err) {
@@ -115,6 +184,7 @@ exports.findOne = (req, res) => {
 };
 
 exports.update = (req, res) => {
+<<<<<<< HEAD
     // Validate Request
     if (!req.body) {
         res.status(400).send({
@@ -122,6 +192,20 @@ exports.update = (req, res) => {
         });
     }
     console.log(req.params.driverId);
+=======
+  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
+  if(req.decoded.admin==false){
+    return res.status(401);
+  }
+  */
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+  console.log(req.params.driverId);
+>>>>>>> DB-SERVER-API
 
 
     Driver.updateById(
@@ -147,6 +231,7 @@ exports.update = (req, res) => {
 };
 
 exports.delete = (req, res) => {
+<<<<<<< HEAD
     Driver.remove(req.params.driverId, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
@@ -170,4 +255,40 @@ exports.deleteAll = (req, res) => {
             });
         else res.send({ message: `All drivers were deleted successfully!` });
     });
+=======
+  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
+  if(req.decoded.admin==false){
+    return res.status(401);
+  }
+  */
+  Driver.remove(req.params.driverId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Parking slot with id ${req.params.driverId}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Could not delete driver with id " + req.params.driverId
+        });
+      }
+    } else res.send({ message: `driver was deleted successfully!` });
+  });
+};
+
+exports.deleteAll = (req, res) => {
+  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
+  if(req.decoded.admin==false){
+    return res.status(401);
+  }
+  */
+  Driver.removeAll((err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while removing all drivers."
+      });
+    else res.send({ message: `All drivers were deleted successfully!` });
+  });
+>>>>>>> DB-SERVER-API
 };
