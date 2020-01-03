@@ -1,12 +1,13 @@
-
 const express = require('express');
 const router = express.Router();
-const check=require("../controller/checkToken.js");
+const check = require("../controller/checkToken.js");
 const parkingslot = require("../controller/parkingController.js");
 const driver = require("../controller/driverController.js");
+const send = require("../controller/mailSender.js");
+
 
 // Create a new Parking slot
-router.post("/parking",check.checkToken, parkingslot.create);
+router.post("/parking", check.checkToken, parkingslot.create);
 // Retrieve all Parking slots
 router.get("/parking", parkingslot.findAll);
 // Retrieve a single Parking slot with parkingId
@@ -35,7 +36,8 @@ router.put("/users/:driverId", driver.update);
 router.delete("/users/:driverId", driver.delete);
 // delete all parking slots
 router.delete("/users", driver.deleteAll);
-
+//report a problem with an email
+router.post("/users/:driverId/report", check.checkToken, send.sendMail);
 
 
 

@@ -4,7 +4,8 @@ const chaiHttp = require("chai-http");
 const { expect } = chai;
 chai.use(chaiHttp);
 let parkingId = 0;
-
+let token;
+let userId = 0;
 describe("Server!", () => {
     it("welcomes user to the api", (done) => {
         chai
@@ -12,11 +13,56 @@ describe("Server!", () => {
             .get("/")
             .end((err, res) => {
                 expect(res).to.have.status(200);
-                expect(res.body.message).to.equals("Welcome to our application.");
+
                 done();
             });
     });
+    describe("POST\User", () => {
+        it('it should POST a user ', (done) => {
+            let user = {
+                username: "dante",
+                email: "dd@gmail.it",
+                password: "samuele"
+            }
 
+            chai.request(app)
+                .post('/register')
+                .send(user)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('username', "dante");
+                    expect(res.body).to.have.property('email', "dd@gmail.it");
+                    expect(res.body).to.have.property('password');
+                    done();
+
+                });
+
+
+        });
+    });
+    describe("Driver login", () => {
+        it('user login ', (done) => {
+            let user = {
+                username: "dante",
+                email: "dd@gmail.it",
+                password: "samuele"
+            }
+
+            chai.request(app)
+                .post('/login')
+                .send(user)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('jwtToken');
+                    token = res.body.jwtToken;
+                    done();
+
+                });
+
+
+        });
+
+    });
 
     describe("POST\Parking", () => {
         it('it should POST a parking ', (done) => {
@@ -30,6 +76,7 @@ describe("Server!", () => {
 
             chai.request(app)
                 .post('/parking')
+                .set('Authorization', 'Bearer ' + token)
                 .send(parking)
                 .end((err, res) => {
                     expect(res).to.have.status(200);
@@ -55,6 +102,7 @@ describe("Server!", () => {
             }
             chai.request(app)
                 .post('/parking')
+                .set('Authorization', 'Bearer ' + token)
                 .send(parking)
                 .end((err, res) => {
                     expect(res).to.have.status(404);
@@ -180,6 +228,18 @@ describe("Server!", () => {
                     expect(res.body.message).to.equals("All Parking slot were deleted successfully!");
 
                     done();
+                });
+        });
+    });
+    describe('/DELETE/ALL', () => {
+        it('it should DELETE all users', (done) => {
+            chai.request(app)
+                .delete('/users')
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body.message).to.equals("All drivers were deleted successfully!");
+                    done();
+
                 });
         });
     });
