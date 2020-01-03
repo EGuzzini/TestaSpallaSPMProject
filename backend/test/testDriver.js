@@ -11,7 +11,7 @@ describe("Server!", () => {
             .get("/")
             .end((err, res) => {
                 expect(res).to.have.status(200);
-                expect(res.body.message).to.equals("Welcome to our application.");
+
                 done();
             });
     });
@@ -37,6 +37,7 @@ describe("Server!", () => {
 
 
         });
+        /*
         it('it try to POST a user without password', (done) => {
             let user = {
                 username: "emanuele",
@@ -54,8 +55,25 @@ describe("Server!", () => {
                 });
 
 
-        });
+        });*/
+        it('it try to POST a user without email', (done) => {
+            let user = {
+                username: "emanuele",
 
+                password: "samuele"
+            }
+
+            chai.request(app)
+                .post('/register')
+                .send(user)
+                .end((err, res) => {
+                    expect(res).to.have.status(500);
+                    done();
+
+                });
+
+
+        });
     });
 
     describe('/GET/ALL USERS', () => {

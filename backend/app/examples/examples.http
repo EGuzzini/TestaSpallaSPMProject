@@ -3,11 +3,12 @@
 //create park
 POST http://localhost:80/parking HTTP/1.1
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImFkbWluIjpmYWxzZSwiaWF0IjoxNTc2NzQ3ODI0LCJleHAiOjE1NzY3NDc4ODR9.VEPu4JkXOthpD6a5Xp6mWvY2cLx6Me5sAIGSzcaqQMg
 
 {
     "status": 0,
-    "posx": 81.3,
-    "posy": 66.5,
+    "posx": 59.7,
+    "posy": 69.1,
     "comune": "montecassiano",
     "costoorario": 6.3
 }
@@ -50,11 +51,22 @@ POST http://localhost:80/register HTTP/1.1
 content-type: application/json
 
 {
+    "username": "Sam",
+    "email": "ssaam",
+    "password": "samuele"
+}
+###
+
+POST http://localhost:80/login HTTP/1.1
+content-type: application/json
+
+{
     "username": "Guzzo",
     "email": "sam",
     "password": "samuele"
 }
 ###
+
 //get all drivers
 GET http://localhost:80/users HTTP/1.1
 ###
@@ -67,3 +79,4 @@ DELETE http://localhost:80/users HTTP/1.1
 //remove driver by id
 DELETE http://localhost:80/users/10 HTTP/1.1
 ###
+
