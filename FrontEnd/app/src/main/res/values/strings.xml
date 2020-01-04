@@ -7,5 +7,13 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_m">MActivity</string>
-    <string name="connection">http://ab87bd18.ngrok.io/</string>
+    <string name="connection">http://dc30a34d.ngrok.io/</string>
+    <string name="Request_OK">200</string>
+    <string-array name="report">
+        <item>Login/Signin</item>
+        <item>Navigation</item>
+        <item>Pick a Park</item>
+        <item>UI Application</item>
+    </string-array>
+    <string name="selected_item">Selected item:</string>
 </resources>

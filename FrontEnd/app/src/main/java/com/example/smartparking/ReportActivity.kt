@@ -2,50 +2,59 @@ package com.example.smartparking
 
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Bundle
-import android.os.Handler
-import android.os.StrictMode
-import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_login.*
+import android.os.Bundle
+import android.os.StrictMode
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_report.*
 import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
-import java.util.*
-import kotlin.system.*
+import java.util.HashMap
 
-
-class LoginActivity : AppCompatActivity() {
+class ReportActivity : AppCompatActivity() {
     private val prefsname = "com.example.smartparking.prefs"
     private var prefs: SharedPreferences? = null
-    private var doubleBackToExitPressedOnce = false
-    override fun onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-            moveTaskToBack(true)
-            android.os.Process.killProcess(android.os.Process.myPid())
-            exitProcess(1)
-        }
-        this.doubleBackToExitPressedOnce = true
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
-        Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        prefs = this.getSharedPreferences(prefsname, 0)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
-        login_button.setOnClickListener {
+        setContentView(R.layout.activity_report)
+        val  problems = resources.getStringArray((R.array.report))
+        val spinner = findViewById<Spinner>(R.id.reportSpinner)
+        prefs = this.getSharedPreferences(prefsname, 0)
+         if (spinner != null) {
+            val adapter = ArrayAdapter(this,
+                android.R.layout.simple_spinner_item, problems)
+            spinner.adapter = adapter
+
+            spinner.onItemSelectedListener = object :
+                AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>,
+                                            view: View, position: Int, id: Long) {
+                    Toast.makeText(this@ReportActivity,
+                        getString(R.string.selected_item) + " " +
+                                "" + problems[position], Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    // write code to perform some action
+                }
+            }
+    }
+        report_button.setOnClickListener {
             val policy =
                 StrictMode.ThreadPolicy.Builder().permitAll().build()
             StrictMode.setThreadPolicy(policy)
-            login_button.setOnClickListener {
+            report_button.setOnClickListener {
                 val params: HashMap<String, String> =
                     object : HashMap<String, String>() {
                         init {
-                            put("username", username_login.text.toString())
-                            put("password", password_login.text.toString())
+                            put("subject", spinner.selectedItem.toString())
+                            put("text", reportText.text.toString())
                         }
                     }
                 val sbParams = java.lang.StringBuilder()
@@ -63,7 +72,7 @@ class LoginActivity : AppCompatActivity() {
                     i++
                 }
                 try {
-                    val url = getString(R.string.connection) + "login"
+                    val url = getString(R.string.connection) + "report"
                     val urlObj = URL(url)
                     val conn = urlObj.openConnection() as HttpURLConnection
                     conn.doOutput = true
@@ -105,7 +114,7 @@ class LoginActivity : AppCompatActivity() {
                             startActivity(mapact)
                         }
                     } else {
-                        Toast.makeText(this, "Username o password errati.", Toast.LENGTH_LONG)
+                        Toast.makeText(this, "Controllare i dati inseriti.", Toast.LENGTH_LONG)
                             .show()
                     }
                 } catch (e: IOException) {
@@ -117,6 +126,4 @@ class LoginActivity : AppCompatActivity() {
         }
 
     }
-
 }
-
