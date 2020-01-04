@@ -53,8 +53,8 @@ class ReportActivity : AppCompatActivity() {
                 val params: HashMap<String, String> =
                     object : HashMap<String, String>() {
                         init {
-                            put("username", spinner.selectedItem.toString())
-                            put("password", reportText.text.toString())
+                            put("subject", spinner.selectedItem.toString())
+                            put("text", reportText.text.toString())
                         }
                     }
                 val sbParams = java.lang.StringBuilder()
