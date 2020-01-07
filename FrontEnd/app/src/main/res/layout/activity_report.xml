@@ -7,21 +7,6 @@
     android:background="@drawable/gradient"
     tools:context=".ReportActivity">
 
-    <EditText
-        android:id="@+id/reportText"
-        android:layout_width="350dp"
-        android:layout_height="260dp"
-        android:layout_marginTop="50dp"
-        android:ems="10"
-        android:hint="Describe you problem."
-        android:inputType="textPersonName"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reportSpinner" />
-
     <TextView
         android:id="@+id/textView2"
         android:layout_width="345dp"
@@ -29,21 +14,48 @@
         android:layout_marginTop="50dp"
         android:text="Report a problem"
         android:textColor="#FFFFFF"
+        android:textColorLink="#FFFFFF"
         android:textSize="45sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Spinner
-        android:id="@+id/reportSpinner"
-        android:layout_width="200dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="75dp"
+    <EditText
+        android:id="@+id/reportText"
+        android:layout_width="350dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="100dp"
+        android:ems="10"
+        android:hint="Describe you problem."
+        android:inputType="textMultiLine"
+        android:textAlignment="textStart"
+        android:textColor="#FFFFFF"
+        android:textColorHighlight="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:textColorLink="#FFFFFF"
+        android:textCursorDrawable="@color/mapbox_plugins_white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/subjecttext" />
 
+
+    <EditText
+        android:id="@+id/subjecttext"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="150dp"
+        android:ems="10"
+        android:hint="Object"
+        android:inputType="textPersonName"
+        android:textColor="#FFFFFF"
+        android:textColorHighlight="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:textColorLink="#FFFFFF"
+        android:textCursorDrawable="@color/mapbox_plugins_white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -80,4 +92,5 @@
                 android:textSize="18sp" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,11 +2,14 @@ package com.example.smartparking;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
@@ -23,7 +26,6 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
@@ -49,11 +51,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private PermissionsManager permissionsManager;
     private MapboxMap mapboxMap;
     private MapView mapView;
+    private static final String PREF_NAME = "com.example.smartparking.prefs";
     private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
     private String geojsonSourceLayerId = "geojsonSourceLayerId";
     private String symbolIconId = "symbolIconId";
     boolean doubleBackToExitPressedOnce = false;
-
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
@@ -84,7 +86,32 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.threedot, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent help = new Intent(this, ReportActivity.class);
+        Intent login = new Intent(this, LoginActivity.class);
+        int id = item.getItemId();
+        if(id == R.id.account){
+
+        }
+        if(id == R.id.help){
+            startActivity(help);
+        }
+        if(id == R.id.logout){
+            SharedPreferences sharedPrefs = getSharedPreferences(PREF_NAME, 0);
+            SharedPreferences.Editor editor = sharedPrefs.edit();
+            editor.clear();
+            editor.commit();
+            startActivity(login);
+        }
+        return super.onOptionsItemSelected(item);
+    }
     @Override
     public void onMapReady(@NonNull final MapboxMap mapboxMap) {
         MapActivity.this.mapboxMap = mapboxMap;

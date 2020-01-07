@@ -14,7 +14,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ReportActivity"></activity>
+        <activity android:name=".ReportActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".AddParkingActivity" />
         <activity
@@ -23,7 +26,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MapActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+             />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
