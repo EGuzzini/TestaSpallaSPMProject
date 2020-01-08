@@ -41,22 +41,22 @@ Driver.findById = (driverId, result) => {
 };
 Driver.findByEmailOrUsername = (driverusername, result) => {
     sql.query(`SELECT * FROM driver WHERE email = '${driverusername}' OR username = '${driverusername}' `, (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-        return;
-      }
-  
-      if (res.length) {
-        console.log("found driver with this email: ", res[0]);
-        result(null, res[0]);
-        return;
-      }
-  
-      // not found driver with
-      result({ kind: "not_found" }, null);
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+
+        if (res.length) {
+            console.log("found driver with this email: ", res[0]);
+            result(null, res[0]);
+            return;
+        }
+
+        // not found driver with
+        result({ kind: "not_found" }, null);
     });
-  };
+};
 
 Driver.getAll = result => {
     sql.query("SELECT * FROM driver", (err, res) => {

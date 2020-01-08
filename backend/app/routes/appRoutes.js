@@ -35,14 +35,11 @@ router.put("/users/:driverId", check.checkToken, driver.update);
 // Delete a Parking slot with parkingId
 router.delete("/users/:driverId", check.checkToken, driver.delete);
 // delete all parking slots
-<<<<<<< HEAD
-router.delete("/users", driver.deleteAll);
+router.delete("/users", check.checkToken, driver.deleteAll);
 //report a problem with an email
 router.post("/users/:driverId/report", check.checkToken, send.sendMail);
-=======
-router.delete("/users", check.checkToken, driver.deleteAll);
 
->>>>>>> DB-SERVER-API
+
 
 
 

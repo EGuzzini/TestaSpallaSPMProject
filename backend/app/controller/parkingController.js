@@ -1,6 +1,6 @@
 
 const Parkingslot = require("../models/parkingModels.js");
-
+const sql = require("../models/db.js");
 exports.create = (req, res) => {
 
   /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
@@ -8,7 +8,7 @@ exports.create = (req, res) => {
     return res.status(401);
   }
   */
-  console.log(req.decoded.iat+" admin");
+  console.log(req.decoded.iat + " admin");
   console.log("req.headers:  " + req.header('Authorization'));
   // Validate request
   if (!req.body) {
@@ -17,20 +17,21 @@ exports.create = (req, res) => {
     });
   }
   console.log(req.body);
+
   // Create a Customer
   const ps = new Parkingslot({
     status: req.body.status,
-    posx: req.body.posx,
-    posy: req.body.posy,
+    coord: req.body.coord,
     comune: req.body.comune,
     costoorario: req.body.costoorario
   });
-
-  Parkingslot.findByPosition(ps.posx, ps.posy, (err, data) => {
-    console.log(data);
+  var xy = ps.coord.split(',');
+  
+  Parkingslot.findByPosition(xy[0],xy[1], (err, data) => {
+    console.log(data+" ciao");
     if (data !== null) {
       res.status(404).send({
-        message: `already exist a Parking with posx ${ps.posx} and posy ${ps.posy} .`
+        message: `already exist a Parking with coord ${ps.coord} .`
       });
     } else {
       // Save Customer in the database

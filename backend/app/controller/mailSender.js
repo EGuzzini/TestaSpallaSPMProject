@@ -1,8 +1,7 @@
 const nodemailer = require('nodemailer');
-const jwt = require('jsonwebtoken');
-const jwtDecode = require('jwt-decode');
 
 let sendMail = (req, res) => {
+    /*
     let token = req.headers['x-access-token'] || req.headers['authorization'];
     if (token.startsWith('Bearer ')) {
         // Remove Bearer from string
@@ -12,6 +11,8 @@ let sendMail = (req, res) => {
     console.log('------------------------------------');
     console.log(decoded.email);
     console.log('------------------------------------');
+    */
+
     let mailData = { subject: req.body.subject, text: req.body.text };
     let transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -25,7 +26,7 @@ let sendMail = (req, res) => {
         from: 'smartparkingNoreplyTestaspalla@gmail.com',
         to: 'dante.domizi@studenti.unicam.it',
         subject: mailData.text,
-        text: mailData.text + " from " + decoded.email
+        text: mailData.text + " from " + req.decoded.email
     };
 
     transporter.sendMail(mailOptions, function(error, info) {

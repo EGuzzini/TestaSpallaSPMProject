@@ -3,12 +3,11 @@
 //create park
 POST http://localhost:80/parking HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImFkbWluIjpmYWxzZSwiaWF0IjoxNTc2NzQ3ODI0LCJleHAiOjE1NzY3NDc4ODR9.VEPu4JkXOthpD6a5Xp6mWvY2cLx6Me5sAIGSzcaqQMg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImFkbWluIjpmYWxzZSwiaWF0IjoxNTc4NDkzMzQyLCJleHAiOjE1Nzg0OTQ1NDJ9.hbIo5f0pdvGNCcsNeg8B3p8uleVm9WVzJB6qTtPt4JQ
 
 {
     "status": 0,
-    "posx": 59.7,
-    "posy": 69.1,
+    "coord": "13.075009882450104,43.13747491759089",
     "comune": "montecassiano",
     "costoorario": 6.3
 }
@@ -22,8 +21,7 @@ content-type: application/json
 
 {
     "status": 0,
-    "posx": "{{$randomInt 0 100}}",
-    "posy": "{{$randomInt 0 100}}",
+    "coord": [13.075009882450104,43.13747491759089],
     "comune": "montecassiano",
     "costoorario": 6.3
 }
@@ -40,7 +38,8 @@ GET http://192.168.43.55/parking HTTP/1.1
 GET http://localhost:8080/parking/26 HTTP/1.1
 ###
 //delete all park
-DELETE http://localhost:8080/parking HTTP/1.1
+DELETE http://localhost:80/parking HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImFkbWluIjpmYWxzZSwiaWF0IjoxNTc4NDc2OTIyLCJleHAiOjE1Nzg0NzgxMjJ9.g6Pesvnr5KF3TrFa1CyEbAqw12cTdQtkVmsZNkkamc8
 ###
 
 
@@ -80,3 +79,6 @@ DELETE http://localhost:80/users HTTP/1.1
 DELETE http://localhost:80/users/10 HTTP/1.1
 ###
 
+//get all drivers
+GET https://api.mapbox.com/directions-matrix/v1/mapbox/walking/13.075009882450104,43.13747491759089;13.068293631076813,43.139578923782565;13.068079054355621,43.1399801446507?sources=1;2&destinations=0&access_token=pk.eyJ1Ijoid2lsbGlhbTk2IiwiYSI6ImNrNTN3YXJ2MDBidWIzZ2s2cWpubHhwcG0ifQ.bUTnoo7Hqb193F8MthF0uw HTTP/1.1
+###
