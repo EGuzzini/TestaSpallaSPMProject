@@ -42,9 +42,11 @@ Parkingslot.findById = (parkingId, result) => {
   });
 };
 
-Parkingslot.findByPosition = (x,y, result) => {
- 
-  
+
+
+Parkingslot.findByPosition = (x, y, result) => {
+
+
   sql.query(`SELECT * FROM parkingslot WHERE SUBSTRING_INDEX(coord, ',', 1) =${x} AND SUBSTRING_INDEX(coord, ',', -1) =${y}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -62,7 +64,7 @@ Parkingslot.findByPosition = (x,y, result) => {
     result({ kind: "not_found" }, null);
   });
 };
-Parkingslot.getAll = result => {
+Parkingslot.getAll = (result) => {
   sql.query("SELECT * FROM parkingslot", (err, res) => {
     if (err) {
       console.log("error: ", err);

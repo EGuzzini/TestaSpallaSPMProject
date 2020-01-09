@@ -9,15 +9,18 @@ const send = require("../controller/mailSender.js");
 // Create a new Parking slot
 router.post("/parking", check.checkToken, parkingslot.create);
 // Retrieve all Parking slots
-router.get("/parking", check.checkToken, parkingslot.findAll);
+router.get("/parking", parkingslot.findAll);
 // Retrieve a single Parking slot with parkingId
-router.get("/parking/:parkingId", check.checkToken, parkingslot.findOne);
+router.get("/parking/:parkingId", parkingslot.findOne);
 // Update a Parking slot with parkingId
 router.put("/parking/:parkingId", check.checkToken, parkingslot.update);
 // Delete a Parking slot with parkingId
 router.delete("/parking/:parkingId", check.checkToken, parkingslot.delete);
 // delete all parking slots
 router.delete("/parking", check.checkToken, parkingslot.deleteAll);
+// nearest park to destination
+router.get("/parkingnearest", parkingslot.nearest);
+
 
 
 // routes for driver
@@ -27,13 +30,13 @@ router.post("/register", driver.create);
 router.post("/login", driver.login)
 
 //get all users
-router.get("/users", check.checkToken, driver.findAll);
+router.get("/users", driver.findAll);
 // Retrieve a single driver with parkingId
-router.get("/users/:driverId", check.checkToken, driver.findOne);
+router.get("/users/:driverId", driver.findOne);
 // Update a driver with driverId
 router.put("/users/:driverId", check.checkToken, driver.update);
 // Delete a Parking slot with parkingId
-router.delete("/users/:driverId", check.checkToken, driver.delete);
+router.delete("/users/:driverId", driver.delete);
 // delete all parking slots
 router.delete("/users", check.checkToken, driver.deleteAll);
 //report a problem with an email
