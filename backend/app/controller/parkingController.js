@@ -52,7 +52,6 @@ exports.create = (req, res) => {
 exports.nearest = (req, res) => {
   //chiamata alla funzione del model per il parcheggio più vicino
   var destination = "13.075009882450104,43.13747491759089";
-  var risultato = "";
   Parkingslot.getAll((err, data) => {
     if (err)
       res.status(500).send({
@@ -64,29 +63,38 @@ exports.nearest = (req, res) => {
       for (var key in data) {
         if (data.hasOwnProperty(key)) {
           coordparcheggi.push(data[key].coord);
-
         }
       }
       coordparcheggi = coordparcheggi.join(';');
-      var indici=[];
+      var indici = [];
       for (var key in data) {
         if (data.hasOwnProperty(key)) {
-          var count=parseInt(Object.keys(data)[key])+1
+          var count = parseInt(Object.keys(data)[key]) + 1
           console.log(typeof Object.keys(data));
           indici.push(count);
-
         }
       }
-      indici=indici.join(';');
-      console.log(indici + " indici")
+      indici = indici.join(';');
       const options = {
-        url: 'https://api.mapbox.com/directions-matrix/v1/mapbox/walking/' + destination + ';' + coordparcheggi + '?sources='+indici+'&destinations=0&access_token=pk.eyJ1Ijoid2lsbGlhbTk2IiwiYSI6ImNrNTN3YXJ2MDBidWIzZ2s2cWpubHhwcG0ifQ.bUTnoo7Hqb193F8MthF0uw',
+        url: 'https://api.mapbox.com/directions-matrix/v1/mapbox/walking/' + destination + ';' + coordparcheggi + '?sources=' + indici + '&destinations=0&access_token=pk.eyJ1Ijoid2lsbGlhbTk2IiwiYSI6ImNrNTN3YXJ2MDBidWIzZ2s2cWpubHhwcG0ifQ.bUTnoo7Hqb193F8MthF0uw',
         method: 'GET',
         json: true
       };
       request(options, function (err, body) {
         res.send(body);
-        // console.log(JSON.parse(body));
+        //ritorna la location della source che ha durata minore
+        var array = [];
+        for (var key in body.body.durations) {
+          if (body.body.durations.hasOwnProperty(key)) {
+            array.push(body.body.durations[key][0]);
+          }
+        }
+        var minimo = Math.min.apply(null,array);
+        var indiceMin = array.indexOf(minimo);
+        console.log(array)
+        console.log(indiceMin);
+        console.log(minimo);
+        console.log(body.body.sources[indiceMin].location);//questo
       });
     }
   });
