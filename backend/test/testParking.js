@@ -195,7 +195,7 @@ describe("Server!", () => {
 
     });
     describe('/DELETE/:id', () => {
-        it('it should DELETE a parking given the id', (done) => {
+        it('try to DELETE a parking given the wrong id', (done) => {
             let id = 0;
 
             chai.request(app)
@@ -206,7 +206,7 @@ describe("Server!", () => {
                     done();
                 });
         });
-        it('try to DELETE a parking given the wrong id', (done) => {
+        it('it should DELETE a parking given the id', (done) => {
 
             chai.request(app)
                 .delete('/parking/' + parkingId)

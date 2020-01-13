@@ -10,10 +10,13 @@ const driver = require("../backend/app/controller/driverController.js");
 // configure body parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.get("/", check.checkToken, driver.checkTokenInit);
+//app.get("/", check.checkToken, driver.checkTokenInit);
+app.get("/", (req, res) => {
+    res.send().status(200);
+});
 var routes = require('./app/routes/appRoutes'); //importing route
 app.use(routes); //register the route
-app.listen(80, function () {
-  console.log("Server is listening on port: 8080");
+app.listen(80, function() {
+    console.log("Server is listening on port: 8080");
 });
 module.exports = app;

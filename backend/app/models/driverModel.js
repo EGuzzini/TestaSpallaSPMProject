@@ -1,7 +1,7 @@
 const sql = require("./db.js");
 
 // constructor campi della tabella parking slot del database
-const Driver = function (d) {
+const Driver = function(d) {
 
     this.username = d.username;
     this.email = d.email;
@@ -16,8 +16,8 @@ Driver.create = (newdriver, result) => {
             return;
         }
 
-        console.log("created driver: ", { ...newdriver });
-        result(null, { ...newdriver });
+        console.log("created driver: ", {...newdriver });
+        result(null, {...newdriver });
     });
 };
 
@@ -39,8 +39,8 @@ Driver.findById = (driverId, result) => {
         result({ kind: "not_found" }, null);
     });
 };
-Driver.findByEmailOrUsername = (driverusername, result) => {
-    sql.query(`SELECT * FROM driver WHERE email = '${driverusername}' OR username = '${driverusername}' `, (err, res) => {
+Driver.findByEmailOrUsername = (driveremail, driverusername, result) => {
+    sql.query(`SELECT * FROM driver WHERE email = '${driveremail}' OR username = '${driverusername}' `, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
@@ -73,8 +73,7 @@ Driver.getAll = result => {
 
 Driver.updateById = (id, driver, result) => {
     sql.query(
-        "UPDATE driver SET username = ? WHERE idDriver = ?",
-        [driver.username, id],
+        "UPDATE driver SET username = ? WHERE idDriver = ?", [driver.username, id],
         (err, res) => {
             if (err) {
                 console.log("error: ", err);
@@ -88,8 +87,8 @@ Driver.updateById = (id, driver, result) => {
                 return;
             }
 
-            console.log("updated driver: ", { ...driver });
-            result(null, { ...driver });
+            console.log("updated driver: ", {...driver });
+            result(null, {...driver });
         }
     );
 };

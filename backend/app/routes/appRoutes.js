@@ -27,7 +27,7 @@ router.post("/register", driver.create);
 router.post("/login", driver.login)
 
 //get all users
-router.get("/users", check.checkToken, driver.findAll);
+router.get("/users", driver.findAll);
 // Retrieve a single driver with parkingId
 router.get("/users/:driverId", check.checkToken, driver.findOne);
 // Update a driver with driverId
@@ -35,12 +35,15 @@ router.put("/users/:driverId", check.checkToken, driver.update);
 // Delete a Parking slot with parkingId
 router.delete("/users/:driverId", check.checkToken, driver.delete);
 // delete all parking slots
-router.delete("/users", check.checkToken, driver.deleteAll);
+router.delete("/users", driver.deleteAll);
 //report a problem with an email
 router.post("/users/:driverId/report", check.checkToken, send.sendMail);
-
-
-
+//Recovery password
+router.put("/passwordReset", driver.recoveryPassword);
+//Delete account user
+router.delete("/users/:driverId/deleteAccount", check.checkToken, driver.delete);
+//Change account password
+router.put("/users/:driverId/changePassword", check.checkToken, driver.changePassword);
 
 
 module.exports = router;
