@@ -37,6 +37,8 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         login_button.setOnClickListener {
+            val mapact = Intent(this, MapActivity::class.java)
+            startActivity(mapact)
             val policy =
                 StrictMode.ThreadPolicy.Builder().permitAll().build()
             StrictMode.setThreadPolicy(policy)
@@ -101,8 +103,8 @@ class LoginActivity : AppCompatActivity() {
                             e.printStackTrace()
                         } finally {
                             conn.disconnect()
-                            val mapact = Intent(this, MapActivity::class.java)
-                            startActivity(mapact)
+                            /*val mapact = Intent(this, MapActivity::class.java)
+                            startActivity(mapact)*/
                         }
                     } else {
                         Toast.makeText(this, "Username o password errati.", Toast.LENGTH_LONG)

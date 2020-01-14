@@ -12,6 +12,7 @@
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="visible"
         mapbox:mapbox_cameraZoom="15">
 
     </com.mapbox.mapboxsdk.maps.MapView>
@@ -20,10 +21,23 @@
         android:id="@+id/fab_location_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
+        android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:background="#0aa891"
         android:backgroundTint="#0aa891"
         android:src="@drawable/ic_action_searc"
+        mapbox:backgroundTint="#0aa891" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_start_navigation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="90dp"
+        android:background="#0aa891"
+        android:backgroundTint="#0aa891"
+        android:src="@drawable/ic_action_navigate"
+        android:visibility="invisible"
         mapbox:backgroundTint="#0aa891" />
 </FrameLayout>
