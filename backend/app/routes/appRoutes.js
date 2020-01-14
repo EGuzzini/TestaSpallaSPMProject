@@ -7,7 +7,7 @@ const send = require("../controller/mailSender.js");
 
 
 // Create a new Parking slot
-router.post("/parking", check.checkToken, parkingslot.create);
+router.post("/parking", parkingslot.create);
 // Retrieve all Parking slots
 router.get("/parking", parkingslot.findAll);
 // Retrieve a single Parking slot with parkingId

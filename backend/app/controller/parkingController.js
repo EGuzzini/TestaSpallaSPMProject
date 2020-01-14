@@ -2,6 +2,7 @@
 const Parkingslot = require("../models/parkingModels.js");
 const sql = require("../models/db.js");
 const request = require('request');
+const LatLon = require('../../node_modules/geodesy/latlon-spherical.js');
 exports.create = (req, res) => {
 
   /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
@@ -9,7 +10,7 @@ exports.create = (req, res) => {
     return res.status(401);
   }
   */
-  console.log(req.decoded.iat + " admin");
+  // console.log(req.decoded.iat + " admin");
   console.log("req.headers:  " + req.header('Authorization'));
   // Validate request
   if (!req.body) {
@@ -49,6 +50,7 @@ exports.create = (req, res) => {
 
 
 };
+//da inserire il controllo per il parcheggio libero
 exports.nearest = (req, res) => {
   //chiamata alla funzione del model per il parcheggio più vicino
   var destination = "13.075009882450104,43.13747491759089";
@@ -59,28 +61,40 @@ exports.nearest = (req, res) => {
           err.message || "Some error occurred while retrieving parking slots."
       });
     else {
-      var coordparcheggi = [];
-      for (var key in data) {
-        if (data.hasOwnProperty(key)) {
-          coordparcheggi.push(data[key].coord);
-        }
-      }
-      coordparcheggi = coordparcheggi.join(';');
+      count = 0;
       var indici = [];
+      var coordparcheggiCinque = []
+      const dest = LatLon.parse(destination);
+      //calcola la distanza tra le coordinate con l'utilizzo di una funzione geodesiana, se si trova nel raggio di 1000 metri dalla destinazione ed è disponibile allora viene restituito
       for (var key in data) {
         if (data.hasOwnProperty(key)) {
-          var count = parseInt(Object.keys(data)[key]) + 1
-          console.log(typeof Object.keys(data));
-          indici.push(count);
+          const p2 = LatLon.parse(data[key].coord);
+          console.log(p2)
+          const d = LatLon.distanceTo(dest, p2)
+          console.log(d)
+          if (d < 1000 && data[key].status!=1) {
+            coordparcheggiCinque.push(data[key].coord);
+            count++;
+            indici.push(count);
+          }
         }
       }
+      if (coordparcheggiCinque.length == 0) {
+        res.status(404).send({
+          message: `not found a free park .`
+        });
+      }
+      coordparcheggiCinque = coordparcheggiCinque.join(';');
+      console.log(coordparcheggiCinque + " 1000 metri")
       indici = indici.join(';');
       const options = {
-        url: 'https://api.mapbox.com/directions-matrix/v1/mapbox/walking/' + destination + ';' + coordparcheggi + '?sources=' + indici + '&destinations=0&access_token=pk.eyJ1Ijoid2lsbGlhbTk2IiwiYSI6ImNrNTN3YXJ2MDBidWIzZ2s2cWpubHhwcG0ifQ.bUTnoo7Hqb193F8MthF0uw',
+        url: 'https://api.mapbox.com/directions-matrix/v1/mapbox/walking/' + destination + ';' + coordparcheggiCinque + '?sources=' + indici + '&destinations=0&access_token=pk.eyJ1Ijoid2lsbGlhbTk2IiwiYSI6ImNrNTN3YXJ2MDBidWIzZ2s2cWpubHhwcG0ifQ.bUTnoo7Hqb193F8MthF0uw',
         method: 'GET',
         json: true
       };
+      //richiesta all'API tramite modulo REQUEST 
       request(options, function (err, body) {
+        console.log(body.body)
         res.send(body);
         //ritorna la location della source che ha durata minore
         var array = [];
@@ -89,11 +103,8 @@ exports.nearest = (req, res) => {
             array.push(body.body.durations[key][0]);
           }
         }
-        var minimo = Math.min.apply(null,array);
+        var minimo = Math.min.apply(null, array);
         var indiceMin = array.indexOf(minimo);
-        console.log(array)
-        console.log(indiceMin);
-        console.log(minimo);
         console.log(body.body.sources[indiceMin].location);//questo
       });
     }
