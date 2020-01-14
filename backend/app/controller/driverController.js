@@ -4,7 +4,7 @@ const Driver = require("../models/driverModel.js");
 const jwt = require("jsonwebtoken");
 const config = require("../../config.js")
 const nodemailer = require('nodemailer');
-const crypto = require('crypto');
+const randomstring = require("randomstring");
 exports.create = (req, res) => {
     console.log("req body :  " + req.body.username);
     // Validate request
@@ -257,71 +257,97 @@ exports.changePassword = (req, res) => {
 exports.recoveryPassword = (req, res) => {
     Driver.findByEmailOrUsername(req.body.email, null, (err, driver) => {
 
-        if (!driver) {
-            return res.status(401).json({
-                message: "Authentication failed"
-            });
-        }
-        getDriver = driver;
 
-        let newPassword = crypto.randomBytes(8).toString('hex')
-
-        bcrypt.genSalt(saltRounds, function(err, salt) {
-            if (err) {
-                throw err
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                    message: `Not found driver with id ${req.params.driverId}.`
+                });
             } else {
-                bcrypt.hash(newpassword, salt, function(err, hash) {
-                    if (err) {
-                        throw err
-                    } else {
-                        const hashednewpassword = hash;
-                        const d = new Driver({
-                            username: driver.username,
-                            email: driver.email,
-                            passwordhash: hashednewpassword
-                        });
-
-
-
-
-
-
-                        Driver.updateById(
-                            driver.driverId,
-                            d,
-                            (err, data) => {
-                                if (err) {
-                                    throw err
-                                } else {
-                                    let mailData = { subject: "Nuova password", text: "La tua nuova password è: " };
-                                    let transporter = nodemailer.createTransport({
-                                        service: 'gmail',
-                                        auth: {
-                                            user: 'smartparkingNoreplyTestaspalla@gmail.com',
-                                            pass: 'Smartparking'
-                                        }
-                                    });
-                                    let mailOptions = {
-                                        from: 'smartparkingNoreplyTestaspalla@gmail.com',
-                                        to: d.email,
-                                        subject: mailData.subject,
-                                        text: mailData.text + newPassword
-                                    };
-                                    res.send(data);
-                                }
-                            }
-
-
-                        );
-
-
-
-
-                    }
+                res.status(500).send({
+                    message: "Error retrieving driver with id " + req.params.driverId
                 });
             }
+        } else {
 
-        });
+            getDriver = driver;
+
+
+
+            bcrypt.genSalt(saltRounds, function(err, salt) {
+                if (err) {
+                    throw err
+                } else {
+                    let newpassword = randomstring.generate({
+                        length: 8,
+                        charset: 'alphabetic'
+                    });
+                    bcrypt.hash(newpassword, salt, function(err, hash) {
+                        if (err) {
+                            throw err
+                        } else {
+                            const hashednewpassword = hash;
+                            const d = new Driver({
+                                username: getDriver.username,
+                                email: getDriver.email,
+                                passwordhash: hashednewpassword
+                            });
+
+                            Driver.updateById(
+                                getDriver.idDriver,
+                                d,
+                                (err, data) => {
+
+                                    if (err) {
+                                        if (err.kind === "not_found") {
+                                            res.status(404).send({
+                                                message: `Not found Driver with id ${req.params.driverId}.`
+                                            });
+                                        } else {
+                                            res.status(500).send({
+                                                message: "Error updating Driver with id " + req.params.driverId
+                                            });
+                                        }
+                                    } else {
+                                        let mailData = { subject: "Nuova password", text: "La tua nuova password è: " };
+                                        let transporter = nodemailer.createTransport({
+                                            service: 'gmail',
+                                            auth: {
+                                                user: 'smartparkingNoreplyTestaspalla@gmail.com',
+                                                pass: 'Smartparking'
+                                            }
+                                        });
+                                        let mailOptions = {
+                                            from: 'smartparkingNoreplyTestaspalla@gmail.com',
+                                            to: d.email,
+                                            subject: mailData.subject,
+                                            text: mailData.text + newpassword
+                                        };
+                                        transporter.sendMail(mailOptions, function(error, info) {
+                                            if (error) {
+                                                res.status(400); //error
+                                            } else {
+                                                res.send(data).status(200); //success
+                                            }
+
+
+                                        });
+
+                                    }
+                                }
+
+
+                            );
+
+
+
+
+                        }
+                    });
+                }
+
+            });
+        }
     });
 
 };

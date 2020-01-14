@@ -158,6 +158,9 @@ describe("Server!", () => {
                 .end((err, res) => {
 
                     expect(res).to.have.status(200);
+                    console.log('------------------------------------');
+                    console.log(res.body);
+                    console.log('------------------------------------');
                     expect(res.body).to.have.property('username', "dantedomizi");
                     expect(res.body).to.have.property('email', "dante.domizi@studenti.unicam.it");
 
@@ -187,6 +190,25 @@ describe("Server!", () => {
         });
 
 
+
+
+    });
+    describe('Recovery password', () => {
+        it('Send an email with new password', (done) => {
+            let email = {
+
+                email: "dante.domizi@studenti.unicam.it"
+            }
+            chai.request(app)
+                .put("/passwordReset")
+                .send(email)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+
+
+                    done();
+                });
+        });
     });
     describe('/DELETE/:id', () => {
         it('it should DELETE a user given the id', (done) => {

@@ -73,7 +73,7 @@ Driver.getAll = result => {
 
 Driver.updateById = (id, driver, result) => {
     sql.query(
-        "UPDATE driver SET username = ? WHERE idDriver = ?", [driver.username, id],
+        "UPDATE driver SET username = ?, email=?   WHERE idDriver = ?", [driver.username, driver.email, id],
         (err, res) => {
             if (err) {
                 console.log("error: ", err);
