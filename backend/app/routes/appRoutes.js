@@ -36,7 +36,7 @@ router.get("/users/:driverId", driver.findOne);
 // Update a driver with driverId
 router.put("/users/:driverId", check.checkToken, driver.update);
 // Delete a Parking slot with parkingId
-router.delete("/users/:driverId", driver.delete);
+router.delete("/usersid", check.checkToken, driver.delete);
 // delete all parking slots
 router.delete("/users", check.checkToken, driver.deleteAll);
 //report a problem with an email

@@ -68,10 +68,8 @@ exports.nearest = (req, res) => {
       //calcola la distanza tra le coordinate con l'utilizzo di una funzione geodesiana, se si trova nel raggio di 1000 metri dalla destinazione ed è disponibile allora viene restituito
       for (var key in data) {
         if (data.hasOwnProperty(key)) {
-          const p2 = LatLon.parse(data[key].coord);
-          console.log(p2)
-          const d = LatLon.distanceTo(dest, p2)
-          console.log(d)
+          const p2 = LatLon.parse(data[key].coord);         
+          const d = LatLon.distanceTo(dest, p2)         
           if (d < 1000 && data[key].status!=1) {
             coordparcheggiCinque.push(data[key].coord);
             count++;
@@ -85,7 +83,6 @@ exports.nearest = (req, res) => {
         });
       }
       coordparcheggiCinque = coordparcheggiCinque.join(';');
-      console.log(coordparcheggiCinque + " 1000 metri")
       indici = indici.join(';');
       const options = {
         url: 'https://api.mapbox.com/directions-matrix/v1/mapbox/walking/' + destination + ';' + coordparcheggiCinque + '?sources=' + indici + '&destinations=0&access_token=pk.eyJ1Ijoid2lsbGlhbTk2IiwiYSI6ImNrNTN3YXJ2MDBidWIzZ2s2cWpubHhwcG0ifQ.bUTnoo7Hqb193F8MthF0uw',

@@ -55,8 +55,8 @@ POST http://localhost:80/register HTTP/1.1
 content-type: application/json
 
 {
-    "username": "Saam",
-    "email": "ssaaaam",
+    "username": "Guzzo",
+    "email": "sam",
     "password": "samuele"
 }
 ###
@@ -81,7 +81,8 @@ GET http://localhost:80/users/36 HTTP/1.1
 DELETE http://localhost:80/users HTTP/1.1
 ###
 //remove driver by id
-DELETE http://localhost:80/users/10 HTTP/1.1
+DELETE http://localhost:80/usersid HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImRyaXZlcklkIjo0MywiYWRtaW4iOmZhbHNlLCJpYXQiOjE1NzkwOTc1NzksImV4cCI6MTU3OTA5ODc3OX0.0A85eKjO-K3PrCqIFxpb1wFMolwnFJ7Egpqe8WRXKJE
 ###
 
 //get all drivers
