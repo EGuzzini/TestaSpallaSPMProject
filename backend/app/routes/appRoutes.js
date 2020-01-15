@@ -38,12 +38,15 @@ router.put("/users/:driverId", check.checkToken, driver.update);
 // Delete a Parking slot with parkingId
 router.delete("/usersid", check.checkToken, driver.delete);
 // delete all parking slots
-router.delete("/users", check.checkToken, driver.deleteAll);
+router.delete("/users", driver.deleteAll);
 //report a problem with an email
 router.post("/users/:driverId/report", check.checkToken, send.sendMail);
-
-
-
+//Recovery password
+router.put("/passwordReset", driver.recoveryPassword);
+//Delete account user
+router.delete("/users/:driverId/deleteAccount", check.checkToken, driver.delete);
+//Change account password
+router.put("/users/:driverId/changePassword", check.checkToken, driver.changePassword);
 
 
 module.exports = router;

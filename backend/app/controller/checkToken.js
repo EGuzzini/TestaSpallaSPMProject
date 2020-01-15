@@ -8,25 +8,24 @@ let checkToken = (req, res, next) => {
         token = token.slice(7, token.length);
     }
 
-  if (token) {
-    jwt.verify(token, config.secret, (err, decoded) => {
-      if (err) {
-        return res.status(401).json({
-          success: false,
-          message: 'Token is not valid'
+    if (token) {
+        jwt.verify(token, config.secret, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Token is not valid'
+                });
+            } else {
+                req.decoded = decoded;
+                next();
+            }
         });
-      } else {
-        req.decoded = decoded;
-        console.log(decoded)
-        next();
-      }
-    });
-  } else {
-    return res.json({
-      success: false,
-      message: 'Auth token is not supplied'
-    });
-  }
+    } else {
+        return res.json({
+            success: false,
+            message: 'Auth token is not supplied'
+        });
+    }
 };
 
 module.exports = {

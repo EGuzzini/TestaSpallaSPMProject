@@ -25,7 +25,7 @@ let sendMail = (req, res) => {
     let mailOptions = {
         from: 'smartparkingNoreplyTestaspalla@gmail.com',
         to: 'dante.domizi@studenti.unicam.it',
-        subject: mailData.text,
+        subject: mailData.subject,
         text: mailData.text + " from " + req.decoded.email
     };
 
