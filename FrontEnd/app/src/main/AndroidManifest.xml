@@ -2,9 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.smartparking">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
 
     <application
         android:allowBackup="true"
@@ -14,16 +17,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ReportActivity"></activity>
+        <activity android:name=".AccountActivity"></activity>
+        <activity android:name=".MapActivityTest" />
+        <activity
+            android:name=".ReportActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".AddParkingActivity" />
         <activity
             android:name=".ParkingActivity"
             android:label="@string/title_activity_parking"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".MapActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".MapActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
