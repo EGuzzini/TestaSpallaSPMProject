@@ -19,7 +19,7 @@ router.delete("/parking/:parkingId", check.checkToken, parkingslot.delete);
 // delete all parking slots
 router.delete("/parking", check.checkToken, parkingslot.deleteAll);
 // nearest park to destination
-router.get("/parkingnearest", parkingslot.nearest);
+router.get("/parkingnearest/:destination", parkingslot.nearest);
 
 
 

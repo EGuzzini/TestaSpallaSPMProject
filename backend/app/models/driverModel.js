@@ -39,11 +39,7 @@ Driver.findById = (driverId, result) => {
         result({ kind: "not_found" }, null);
     });
 };
-<<<<<<< HEAD
 Driver.findByEmailOrUsername = (driveremail, driverusername, result) => {
-=======
-Driver.findByEmailOrUsername = (driveremail,driverusername, result) => {
->>>>>>> DB-SERVER-API
     sql.query(`SELECT * FROM driver WHERE email = '${driveremail}' OR username = '${driverusername}' `, (err, res) => {
         if (err) {
             console.log("error: ", err);
@@ -76,8 +72,8 @@ Driver.getAll = result => {
 };
 
 Driver.updateById = (id, driver, result) => {
-    sql.query(
-        "UPDATE driver SET username = ?, email=?   WHERE idDriver = ?", [driver.username, driver.email, id],
+
+    sql.query("UPDATE driver SET username = ?, email =  ?  WHERE idDriver = ?", [driver.username, driver.email, id],
         (err, res) => {
             if (err) {
                 console.log("error: ", err);
@@ -96,7 +92,26 @@ Driver.updateById = (id, driver, result) => {
         }
     );
 };
+Driver.updatePasswordById = (id, hashednewpassword, result) => {
 
+    sql.query("UPDATE driver SET password = ?  WHERE idDriver = ?", [hashednewpassword, id],
+        (err, res) => {
+            if (err) {
+                console.log("error: ", err);
+                result(null, err);
+                return;
+            }
+
+            if (res.affectedRows == 0) {
+                // not found driver with the id
+                result({ kind: "not_found" }, null);
+                return;
+            }
+
+            result(null, res);
+        }
+    );
+};
 Driver.remove = (id, result) => {
     sql.query("DELETE FROM driver WHERE idDriver = ?", id, (err, res) => {
         if (err) {

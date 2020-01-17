@@ -193,9 +193,7 @@ exports.changePassword = (req, res) => {
                     throw err
                 } else {
                     bcrypt.compare(password.oldPassword, data.password, (err, response) => {
-                        console.log('------------------------------------');
-                        console.log(response);
-                        console.log('------------------------------------');
+
                         if (!response) {
                             res.status(401).json({
                                 message: "The old password is wrong"
@@ -210,14 +208,15 @@ exports.changePassword = (req, res) => {
                                             throw err
                                         } else {
                                             const hashednewpassword = hash;
+
                                             const d = new Driver({
                                                 username: data.username,
                                                 email: data.email,
                                                 passwordhash: hashednewpassword
                                             });
-                                            Driver.updateById(
+                                            Driver.updatePasswordById(
                                                 req.params.driverId,
-                                                d,
+                                                hashednewpassword,
                                                 (err, data) => {
 
                                                     if (err) {
@@ -293,18 +292,18 @@ exports.recoveryPassword = (req, res) => {
                                 passwordhash: hashednewpassword
                             });
 
-                            Driver.updateById(
+                            Driver.updatePasswordById(
                                 getDriver.idDriver,
-                                d,
+                                hashednewpassword,
                                 (err, data) => {
 
                                     if (err) {
                                         if (err.kind === "not_found") {
-                                            res.status(404).send({
+                                            res.status(403).send({
                                                 message: `Not found Driver with id ${req.params.driverId}.`
                                             });
                                         } else {
-                                            res.status(500).send({
+                                            res.status(501).send({
                                                 message: "Error updating Driver with id " + req.params.driverId
                                             });
                                         }

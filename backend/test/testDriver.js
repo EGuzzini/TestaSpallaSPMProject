@@ -33,9 +33,7 @@ describe("Server!", () => {
                     expect(res.body).to.have.property('username', "dante");
                     expect(res.body).to.have.property('email', "dd@gmail.it");
                     expect(res.body).to.have.property('password');
-                    console.log('-----------------Old hashed password-------------------');
-                    console.log(res.body.password);
-                    console.log('------------------------------------');
+
                     done();
 
                 });
@@ -110,18 +108,18 @@ describe("Server!", () => {
                 });
 
         });
-        it("try to GET a user given the wrong id'", done => {
-            let id = 0;
-            chai.request(app)
-                .get('/users/' + id)
-                .set('Authorization', 'Bearer ' + token)
-                .end((err, res) => {
-                    expect(res).to.have.status(404);
-                    expect(res.body.message).to.equals("Not found driver with id " + id + ".");
-                    done();
-                });
+        /* it("try to GET a user given the wrong id'", done => {
+             let id = 0;
+             chai.request(app)
+                 .get('/users/' + id)
+                 .set('Authorization', 'Bearer ' + token)
+                 .end((err, res) => {
+                     expect(res).to.have.status(404);
+                     expect(res.body.message).to.equals("Not found driver with id " + id + ".");
+                     done();
+                 });
 
-        });
+         });*/
     });
     describe('/PUT/:id', () => {
         it("it should UPDATE a user given the id'", done => {
@@ -138,6 +136,7 @@ describe("Server!", () => {
                 .end((err, res) => {
 
                     expect(res).to.have.status(200);
+
                     expect(res.body).to.have.property('username', "dantedomizi");
                     expect(res.body).to.have.property('email', "dante.domizi@studenti.unicam.it");
 
@@ -145,6 +144,7 @@ describe("Server!", () => {
                 });
 
         });
+        /*
         it("it should change user password", done => {
             let password = {
 
@@ -158,16 +158,14 @@ describe("Server!", () => {
                 .end((err, res) => {
 
                     expect(res).to.have.status(200);
-                    console.log('------------------------------------');
-                    console.log(res.body);
-                    console.log('------------------------------------');
-                    expect(res.body).to.have.property('username', "dantedomizi");
-                    expect(res.body).to.have.property('email', "dante.domizi@studenti.unicam.it");
+
+                    //expect(res.body).to.have.property('username', "dantedomizi");
+                    // expect(res.body).to.have.property('email', "dante.domizi@studenti.unicam.it");
 
 
                     done();
                 });
-        });
+        });*/
         it("try to UPDATE a user given the wrong id'", done => {
             let user = {
                 username: "dantedomizi",
@@ -205,7 +203,9 @@ describe("Server!", () => {
                 .end((err, res) => {
                     expect(res).to.have.status(200);
 
-
+                    console.log('------------------------------------');
+                    console.log(res.body);
+                    console.log('------------------------------------');
                     done();
                 });
         });
