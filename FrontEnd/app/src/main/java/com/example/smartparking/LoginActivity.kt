@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.StrictMode
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_login.*
@@ -99,6 +98,7 @@ class LoginActivity : AppCompatActivity() {
                             val editor: SharedPreferences.Editor = prefs!!.edit()
                             editor.putString("token", token)
                             editor.apply()
+
                         } catch (e: IOException) {
                             e.printStackTrace()
                         } finally {

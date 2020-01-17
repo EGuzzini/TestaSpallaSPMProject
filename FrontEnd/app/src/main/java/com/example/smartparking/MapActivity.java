@@ -10,7 +10,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,8 +25,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.mapbox.api.directions.v5.models.DirectionsResponse;
-import com.mapbox.api.directions.v5.models.DirectionsRoute;
+
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
@@ -39,6 +38,7 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
@@ -54,18 +54,13 @@ import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.utils.BitmapUtils;
-import com.mapbox.services.android.navigation.ui.v5.NavigationLauncher;
-import com.mapbox.services.android.navigation.ui.v5.NavigationLauncherOptions;
+
 import com.mapbox.services.android.navigation.v5.navigation.MapboxNavigation;
-import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute;
+
 import com.mapbox.services.android.navigation.v5.routeprogress.ProgressChangeListener;
 import com.mapbox.services.android.navigation.v5.routeprogress.RouteProgress;
 
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
@@ -75,8 +70,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private PermissionsManager permissionsManager;
     private MapboxMap mapboxMap;
     private MapView mapView;
-    private  Point ORIGIN = Point.fromLngLat(-77.03194990754128, 38.909664963450105);
-    private  Point DESTINATION = Point.fromLngLat(-77.0270025730133, 38.91057077063121);
+    private Point ORIGIN = Point.fromLngLat(-77.03194990754128, 38.909664963450105);
+    private Point DESTINATION = Point.fromLngLat(-77.0270025730133, 38.91057077063121);
     private static final String PREF_NAME = "com.example.smartparking.prefs";
     private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
     private String geojsonSourceLayerId = "geojsonSourceLayerId";
@@ -84,6 +79,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     boolean doubleBackToExitPressedOnce = false;
     private Double Latitude;
     private Double Longitude;
+
+
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
@@ -98,7 +95,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             @Override
             public void run() {
-                doubleBackToExitPressedOnce=false;
+                doubleBackToExitPressedOnce = false;
             }
         }, 2000);
     }
@@ -113,6 +110,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+        final SharedPreferences sharedPrefs = this.getSharedPreferences(PREF_NAME, 0);
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mFusedLocationClient.getLastLocation().addOnCompleteListener(
                 new OnCompleteListener<Location>() {
@@ -122,9 +121,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         if (location == null) {
                             requestNewLocationData();
                         } else {
-                            Latitude=location.getLatitude();
-                            Longitude= location.getLongitude();
-
+                            Latitude = location.getLatitude();
+                            Longitude = location.getLongitude();
+                            SharedPreferences.Editor editor = sharedPrefs.edit();
+                            editor.putString("ORIGINLONG", Latitude.toString());
+                            editor.putString("ORIGINLAT", Longitude.toString());
+                            editor.apply();
                         }
                     }
                 }
@@ -133,20 +135,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         navigation.addProgressChangeListener(new ProgressChangeListener() {
             @Override
             public void onProgressChange(Location location, RouteProgress routeProgress) {
-                
+
             }
         });
 
     }
 
-    private void destination(Intent data){
-
+    private void destination(Intent data) {
+        final SharedPreferences sharedPrefs = this.getSharedPreferences(PREF_NAME, 0);
         FloatingActionButton navfab = findViewById(R.id.fab_start_navigation);
         final CarmenFeature selectedCarmenFeature = PlaceAutocomplete.getPlace(data);
-
+        final Intent navigate = new Intent(this, MapActivityTest.class);
         navfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Style style = mapboxMap.getStyle();
                 GeoJsonSource source = style.getSourceAs(geojsonSourceLayerId);
                 if (source != null) {
@@ -154,37 +157,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             new Feature[]{Feature.fromJson(selectedCarmenFeature.toJson())}));
                 }
 
-                Point.fromLngLat(((Point) selectedCarmenFeature.geometry()).longitude(), ((Point) selectedCarmenFeature.geometry()).latitude());
-                NavigationRoute.builder(MapActivity.this)
-                        .accessToken(getString(R.string.mapbox_code))
-                        .origin(ORIGIN)
-                        .destination(Point.fromLngLat(((Point) selectedCarmenFeature.geometry()).longitude(), ((Point) selectedCarmenFeature.geometry()).latitude()))
-                        .build()
-                        .getRoute(new Callback<DirectionsResponse>() {
-                            @Override
-                            public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
-
-                                List<DirectionsRoute> route = response.body().routes();
-                                NavigationLauncherOptions options = NavigationLauncherOptions.builder()
-                                        .directionsRoute(route.get(0))
-                                        .shouldSimulateRoute(false)
-                                        .build();
-                                NavigationLauncher.startNavigation(MapActivity.this, options);
-
-                            }
-
-                            @Override
-                            public void onFailure(Call<DirectionsResponse> call, Throwable t) {
-
-                            }
-                        });
+                Point provaa = Point.fromLngLat(((Point) selectedCarmenFeature.geometry()).longitude(), ((Point) selectedCarmenFeature.geometry()).latitude());
+                SharedPreferences.Editor editor = sharedPrefs.edit();
+                editor.putString("DESTINATIONLONG", Double.toString(provaa.latitude()));
+                editor.putString("DESTINATIONLAT", Double.toString(provaa.longitude()));
+                editor.apply();
+               startActivity(navigate);
             }
         });
-        ORIGIN=Point.fromLngLat(Longitude, Latitude);
-        DESTINATION=Point.fromLngLat(((Point) selectedCarmenFeature.geometry()).longitude(), ((Point) selectedCarmenFeature.geometry()).latitude());
+        ORIGIN = Point.fromLngLat(Longitude, Latitude);
+        DESTINATION = Point.fromLngLat(((Point) selectedCarmenFeature.geometry()).longitude(), ((Point) selectedCarmenFeature.geometry()).latitude());
     }
 
-    private void requestNewLocationData(){
+    private void requestNewLocationData() {
 
         LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -199,6 +184,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         );
 
     }
+
     private LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -218,13 +204,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Intent help = new Intent(this, ReportActivity.class);
         Intent login = new Intent(this, LoginActivity.class);
         int id = item.getItemId();
-        if(id == R.id.account){
+        if (id == R.id.account) {
 
         }
-        if(id == R.id.help){
+        if (id == R.id.help) {
             startActivity(help);
         }
-        if(id == R.id.logout){
+        if (id == R.id.logout) {
             SharedPreferences sharedPrefs = getSharedPreferences(PREF_NAME, 0);
             SharedPreferences.Editor editor = sharedPrefs.edit();
             editor.clear();
@@ -233,6 +219,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public void onMapReady(@NonNull final MapboxMap mapboxMap) {
         MapActivity.this.mapboxMap = mapboxMap;
@@ -275,6 +262,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
     }
+
     private void initNavFab() {
         FloatingActionButton navfab = findViewById(R.id.fab_start_navigation);
         navfab.show();
@@ -332,7 +320,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -368,6 +355,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onResume();
         mapView.onResume();
     }
+
     @Override
     protected void onPause() {
         super.onPause();

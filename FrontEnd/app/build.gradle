@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId "com.example.smartparking"
         minSdkVersion 23
-        targetSdkVersion 29
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -51,6 +51,9 @@ dependencies {
         transitive = true
     }
     implementation 'com.google.android.gms:play-services-location:17.0.0'
+    implementation 'com.android.support:recyclerview-v7:29.2.0'
+    implementation 'com.android.support:appcompat-v7:29.2.0'
+    implementation 'com.android.support:design:29.2.0'
 
 
 }
