@@ -52,6 +52,7 @@ exports.create = (req, res) => {
 };
 //da inserire il controllo per il parcheggio libero
 exports.nearest = (req, res) => {
+<<<<<<< HEAD
     //chiamata alla funzione del model per il parcheggio più vicino
     //var destination = "13.075009882450104,43.13747491759089";
     var destination = req.params.destination;
@@ -109,6 +110,55 @@ exports.nearest = (req, res) => {
                 res.send(body.body.sources[indiceMin].location);
 
             });
+=======
+  //chiamata alla funzione del model per il parcheggio più vicino
+  var destination = "13.075009882450104,43.13747491759089";
+  Parkingslot.getAll((err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving parking slots."
+      });
+    else {
+      count = 0;
+      var indici = [];
+      var coordparcheggiCinque = []
+      const dest = LatLon.parse(destination);
+      //calcola la distanza tra le coordinate con l'utilizzo di una funzione geodesiana, se si trova nel raggio di 1000 metri dalla destinazione ed è disponibile allora viene restituito
+      for (var key in data) {
+        if (data.hasOwnProperty(key)) {
+          const p2 = LatLon.parse(data[key].coord);         
+          const d = LatLon.distanceTo(dest, p2)         
+          if (d < 1000 && data[key].status!=1) {
+            coordparcheggiCinque.push(data[key].coord);
+            count++;
+            indici.push(count);
+          }
+        }
+      }
+      if (coordparcheggiCinque.length == 0) {
+        res.status(404).send({
+          message: `not found a free park .`
+        });
+      }
+      coordparcheggiCinque = coordparcheggiCinque.join(';');
+      indici = indici.join(';');
+      const options = {
+        url: 'https://api.mapbox.com/directions-matrix/v1/mapbox/walking/' + destination + ';' + coordparcheggiCinque + '?sources=' + indici + '&destinations=0&access_token=pk.eyJ1Ijoid2lsbGlhbTk2IiwiYSI6ImNrNTN3YXJ2MDBidWIzZ2s2cWpubHhwcG0ifQ.bUTnoo7Hqb193F8MthF0uw',
+        method: 'GET',
+        json: true
+      };
+      //richiesta all'API tramite modulo REQUEST 
+      request(options, function (err, body) {
+        console.log(body.body)
+        res.send(body);
+        //ritorna la location della source che ha durata minore
+        var array = [];
+        for (var key in body.body.durations) {
+          if (body.body.durations.hasOwnProperty(key)) {
+            array.push(body.body.durations[key][0]);
+          }
+>>>>>>> DB-SERVER-API
         }
     });
 

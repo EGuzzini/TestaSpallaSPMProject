@@ -85,6 +85,34 @@ exports.login = (req, res) => {
             });
         })
     });
+  }
+  let getDriver;
+  Driver.findByEmailOrUsername("",req.body.username, (err, driver) => {
+    console.log(JSON.stringify(driver)+ "   username ");
+    if (!driver) {
+      return res.status(401).json({
+        message: "Authentication failed"
+      });
+    }
+    getDriver = driver;
+    return bcrypt.compare(req.body.password, driver.password, (err, response) => {
+      if (!response) {
+        return res.status(401).json({ error: "Authentication failed" }
+        );
+      }
+      console.log(response);
+      let jwtToken = jwt.sign({
+        email: driver.email,
+        driverId: driver.idDriver,
+        admin: false
+      }, config.secret, {
+        expiresIn: "20m"
+      });
+      res.status(200).json({
+        jwtToken
+      });
+    })
+  });
 }
 
 exports.findAll = (req, res) => {
@@ -147,20 +175,27 @@ exports.update = (req, res) => {
     );
 };
 
+//cancella l'account del driver prendendo il driverId dal token 
 exports.delete = (req, res) => {
-    Driver.remove(req.params.driverId, (err, data) => {
-        if (err) {
-            if (err.kind === "not_found") {
-                res.status(404).send({
-                    message: `Not found Parking slot with id ${req.params.driverId}.`
-                });
-            } else {
-                res.status(500).send({
-                    message: "Could not delete driver with id " + req.params.driverId
-                });
-            }
-        } else res.send({ message: `driver was deleted successfully!` });
-    });
+  console.log(req.decoded.driverId+" id driver token")
+  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
+  if(req.decoded.admin==false){
+    return res.status(401);
+  }
+  */
+  Driver.remove(req.decoded.driverId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Parking slot with id ${req.decoded.driverId}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Could not delete driver with id " + req.decoded.driverId
+        });
+      }
+    } else res.send({ message: `driver was deleted successfully!` });
+  });
 };
 
 exports.deleteAll = (req, res) => {
