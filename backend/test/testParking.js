@@ -68,8 +68,7 @@ describe("Server!", () => {
         it('it should POST a parking ', (done) => {
             let parking = {
                 status: 0,
-                posx: 1,
-                posy: 1,
+                coord: "13.063203,43.140406",
                 comune: "montecassiano",
                 costoorario: 6.3
             }
@@ -81,8 +80,7 @@ describe("Server!", () => {
                 .end((err, res) => {
                     expect(res).to.have.status(200);
                     expect(res.body).to.have.property('status', 0);
-                    expect(res.body).to.have.property('posx', 1);
-                    expect(res.body).to.have.property('posy', 1);
+                    expect(res.body).to.have.property('coord', "13.063203,43.140406");
                     expect(res.body).to.have.property('comune', "montecassiano");
                     expect(res.body).to.have.property('costoorario', 6.3);
 
@@ -95,18 +93,18 @@ describe("Server!", () => {
         it('try to POST a parking with the same coordinates  ', (done) => {
             let parking = {
                 status: 0,
-                posx: 1,
-                posy: 1,
+                coord: "13.063203,43.140406",
                 comune: "montecassiano",
                 costoorario: 6.3
             }
+
             chai.request(app)
                 .post('/parking')
                 .set('Authorization', 'Bearer ' + token)
                 .send(parking)
                 .end((err, res) => {
                     expect(res).to.have.status(404);
-                    expect(res.body.message).to.equals("already exist a Parking with posx " + parking.posx + " and posy " + parking.posy + " .");
+                    expect(res.body.message).to.equals("already exist a Parking with coord " + parking.coord + " .");
                     done();
                 });
         });
@@ -116,6 +114,7 @@ describe("Server!", () => {
         it("it should GET all parking", done => {
             chai.request(app)
                 .get('/parking/')
+                .set('Authorization', 'Bearer ' + token)
                 .end((err, res) => {
                     expect(res).to.have.status(200);
                     parkingId = res.body[0].idparkingslot;
@@ -128,6 +127,7 @@ describe("Server!", () => {
         it("it should GET a parking given the id'", done => {
             chai.request(app)
                 .get('/parking/' + parkingId)
+                .set('Authorization', 'Bearer ' + token)
                 .end((err, res) => {
                     expect(res).to.have.status(200);
 
@@ -140,6 +140,7 @@ describe("Server!", () => {
             chai.request(app)
 
             .get('/parking/' + id)
+                .set('Authorization', 'Bearer ' + token)
                 .end((err, res) => {
                     expect(res).to.have.status(404);
                     expect(res.body.message).to.equals("Not found Parking with id " + id + ".");
@@ -152,20 +153,19 @@ describe("Server!", () => {
         it("it should UPDATE a parking given the id'", done => {
             let parking = {
                 status: 0,
-                posx: 3.2,
-                posy: 5.5,
+                coord: "13.075009882450105,43.13747491759090",
                 comune: "Roma",
                 costoorario: 6.3
             }
 
             chai.request(app)
                 .put('/parking/' + parkingId)
+                .set('Authorization', 'Bearer ' + token)
                 .send(parking)
                 .end((err, res) => {
                     expect(res).to.have.status(200);
                     expect(res.body).to.have.property('status', 0);
-                    expect(res.body).to.have.property('posx', 3.2);
-                    expect(res.body).to.have.property('posy', 5.5);
+                    expect(res.body).to.have.property('coord', "13.075009882450105,43.13747491759090");
                     expect(res.body).to.have.property('comune', "Roma");
                     expect(res.body).to.have.property('costoorario', 6.3);
                     done();
@@ -175,14 +175,14 @@ describe("Server!", () => {
         it("try to UPDATE a parking given the wrong id'", done => {
             let parking = {
                 status: 0,
-                posx: 3.2,
-                posy: 5.5,
-                comune: "Roma",
+                coord: "13.163203,43.240406",
+                comune: "montecassiano",
                 costoorario: 6.3
             }
             let id = 0;
             chai.request(app)
                 .put('/parking/' + id)
+                .set('Authorization', 'Bearer ' + token)
                 .send(parking)
                 .end((err, res) => {
                     expect(res).to.have.status(404);
@@ -194,22 +194,54 @@ describe("Server!", () => {
 
 
     });
+
+    describe('Test nearest function', () => {
+        it('try to find the nearest parking to the destination ', (done) => {
+            let destination =
+
+                "13.075009882450105,43.13747491759090"
+
+            chai.request(app)
+                .get("/parkingnearest/" + destination)
+
+            .end((err, res) => {
+
+                expect([13.074867, 43.137282]);
+                done();
+            });
+        });
+        it('expected a empy array of nearest parking to the destination', (done) => {
+            let destination =
+
+                "1.075009882450105,44.13747491759090"
+            chai.request(app)
+                .get("/parkingnearest/" + destination)
+
+            .end((err, res) => {
+
+                expect([]);
+                done();
+            });
+        });
+    });
     describe('/DELETE/:id', () => {
-        it('it should DELETE a parking given the id', (done) => {
+        it('try to DELETE a parking given the wrong id', (done) => {
             let id = 0;
 
             chai.request(app)
                 .delete('/parking/' + id)
+                .set('Authorization', 'Bearer ' + token)
                 .end((err, res) => {
                     expect(res).to.have.status(404);
                     expect(res.body.message).to.equals("Not found Parking slot with id " + id + ".");
                     done();
                 });
         });
-        it('try to DELETE a parking given the wrong id', (done) => {
+        it('it should DELETE a parking given the id', (done) => {
 
             chai.request(app)
                 .delete('/parking/' + parkingId)
+                .set('Authorization', 'Bearer ' + token)
                 .end((err, res) => {
                     expect(res).to.have.status(200);
                     expect(res.body.message).to.equals("Parking slot was deleted successfully!");
@@ -223,6 +255,7 @@ describe("Server!", () => {
         it('it should DELETE all parking', (done) => {
             chai.request(app)
                 .delete('/parking')
+                .set('Authorization', 'Bearer ' + token)
                 .end((err, res) => {
                     expect(res).to.have.status(200);
                     expect(res.body.message).to.equals("All Parking slot were deleted successfully!");
@@ -235,6 +268,7 @@ describe("Server!", () => {
         it('it should DELETE all users', (done) => {
             chai.request(app)
                 .delete('/users')
+                .set('Authorization', 'Bearer ' + token)
                 .end((err, res) => {
                     expect(res).to.have.status(200);
                     expect(res.body.message).to.equals("All drivers were deleted successfully!");

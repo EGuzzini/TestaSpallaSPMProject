@@ -3,8 +3,12 @@ const saltRounds = 10;
 const Driver = require("../models/driverModel.js");
 const jwt = require("jsonwebtoken");
 const config = require("../../config.js")
-<<<<<<< HEAD
+const nodemailer = require('nodemailer');
+const randomstring = require("randomstring");
 
+exports.checkTokenInit = (req, res) => {
+    res.send().status(200)
+}
 exports.create = (req, res) => {
     console.log("req body :  " + req.body.username);
     // Validate request
@@ -13,35 +17,11 @@ exports.create = (req, res) => {
             message: "Content can not be empty!"
         });
     }
-    bcrypt.genSalt(saltRounds, function(err, salt) {
-=======
-
-
-exports.checkTokenInit =(req,res) =>{
-  console.log("req.headers:  " + req.header('Authorization'));
-  //significa che il token è valido all'apertura dell'app
-  return res.send().status(200);
-}
-
-
-exports.create = (req, res) => {
-  console.log("req body :  " + req.body.username);
-  // Validate request
-  if (!req.body) {
-    res.status(400).send({
-      message: "Content can not be empty!"
-    });
-  }
-  bcrypt.genSalt(saltRounds, function (err, salt) {
-    if (err) {
-      throw err
-    } else {
-      bcrypt.hash(req.body.password, salt, function (err, hash) {
->>>>>>> DB-SERVER-API
+    bcrypt.genSalt(saltRounds, function (err, salt) {
         if (err) {
             throw err
         } else {
-            bcrypt.hash(req.body.password, salt, function(err, hash) {
+            bcrypt.hash(req.body.password, salt, function (err, hash) {
                 if (err) {
                     throw err
                 } else {
@@ -76,75 +56,40 @@ exports.create = (req, res) => {
 
 
 exports.login = (req, res) => {
-<<<<<<< HEAD
     if (!req.body) {
         res.status(400).send({
             message: "Content can not be empty!"
         });
     }
     let getDriver;
-
-    Driver.findByEmailOrUsername(req.body.email, req.body.username, (err, driver) => {
-        console.log(req.body.username + "   username ");
+    Driver.findByEmailOrUsername("", req.body.username, (err, driver) => {
+        console.log(JSON.stringify(driver) + "   username ");
         if (!driver) {
             return res.status(401).json({
-                message: "Authentication failed porcodi"
+                message: "Authentication failed"
             });
         }
         getDriver = driver;
         return bcrypt.compare(req.body.password, driver.password, (err, response) => {
             if (!response) {
-                return res.status(401).json({
-                    message: "Authentication failed"
-                });
+                return res.status(401).json({ error: "Authentication failed" }
+                );
             }
             console.log(response);
             let jwtToken = jwt.sign({
-                email: getDriver.email,
-                driverId: getDriver.driverId
+                email: driver.email,
+                driverId: driver.idDriver,
+                admin: false
             }, config.secret, {
-                expiresIn: "1h"
+                expiresIn: "20m"
             });
             res.status(200).json({
                 jwtToken
             });
         })
     });
-=======
-  if (!req.body) {
-    res.status(400).send({
-      message: "Content can not be empty!"
-    });
-  }
-  let getDriver;
-  Driver.findByEmailOrUsername(req.body.username, (err, driver) => {
-    console.log(req.body.username + "   username ");
-    if (!driver) {
-      return res.status(401).json({
-        message: "Authentication failed"
-      });
-    }
-    getDriver = driver;
-    return bcrypt.compare(req.body.password, driver.password, (err, response) => {
-      if (!response) {
-        return res.status(401).json({ error: "Authentication failed" }
-        );
-      }
-      console.log(response);
-      let jwtToken = jwt.sign({
-        email: getDriver.email,
-        driverId: getDriver.driverId,
-        admin: false
-      }, config.secret, {
-        expiresIn: "20m"
-      });
-      res.status(200).json({
-        jwtToken
-      });
-    })
-  });
->>>>>>> DB-SERVER-API
 }
+
 
 exports.findAll = (req, res) => {
     Driver.getAll((err, data) => {
@@ -157,16 +102,7 @@ exports.findAll = (req, res) => {
 };
 
 exports.findOne = (req, res) => {
-<<<<<<< HEAD
     Driver.findById(req.params.driverId, (err, data) => {
-=======
-  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
-  if(req.decoded.admin==false){
-    return res.status(401);
-  }
-  */
-  Driver.findById(req.params.driverId, (err, data) => {
->>>>>>> DB-SERVER-API
 
         console.log(req.params.driverId + " driver id");
         if (err) {
@@ -184,7 +120,6 @@ exports.findOne = (req, res) => {
 };
 
 exports.update = (req, res) => {
-<<<<<<< HEAD
     // Validate Request
     if (!req.body) {
         res.status(400).send({
@@ -192,20 +127,6 @@ exports.update = (req, res) => {
         });
     }
     console.log(req.params.driverId);
-=======
-  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
-  if(req.decoded.admin==false){
-    return res.status(401);
-  }
-  */
-  // Validate Request
-  if (!req.body) {
-    res.status(400).send({
-      message: "Content can not be empty!"
-    });
-  }
-  console.log(req.params.driverId);
->>>>>>> DB-SERVER-API
 
 
     Driver.updateById(
@@ -230,17 +151,23 @@ exports.update = (req, res) => {
     );
 };
 
+//cancella l'account del driver prendendo il driverId dal token 
 exports.delete = (req, res) => {
-<<<<<<< HEAD
-    Driver.remove(req.params.driverId, (err, data) => {
+    console.log(req.decoded.driverId + " id driver token")
+    /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
+    if(req.decoded.admin==false){
+      return res.status(401);
+    }
+    */
+    Driver.remove(req.decoded.driverId, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: `Not found Parking slot with id ${req.params.driverId}.`
+                    message: `Not found Parking slot with id ${req.decoded.driverId}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Could not delete driver with id " + req.params.driverId
+                    message: "Could not delete driver with id " + req.decoded.driverId
                 });
             }
         } else res.send({ message: `driver was deleted successfully!` });
@@ -255,40 +182,182 @@ exports.deleteAll = (req, res) => {
             });
         else res.send({ message: `All drivers were deleted successfully!` });
     });
-=======
-  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
-  if(req.decoded.admin==false){
-    return res.status(401);
-  }
-  */
-  Driver.remove(req.params.driverId, (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found Parking slot with id ${req.params.driverId}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Could not delete driver with id " + req.params.driverId
-        });
-      }
-    } else res.send({ message: `driver was deleted successfully!` });
-  });
+};
+exports.changePassword = (req, res) => {
+    let password = { oldPassword: req.body.oldpassword, newPassword: req.body.newpassword };
+    Driver.findById(req.params.driverId, (err, data) => {
+
+        console.log(req.params.driverId + " driver id");
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                    message: `Not found driver with id ${req.params.driverId}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: "Error retrieving driver with id " + req.params.driverId
+                });
+            }
+        } else {
+            bcrypt.genSalt(saltRounds, function (err, salt) {
+                if (err) {
+                    throw err
+                } else {
+                    bcrypt.compare(password.oldPassword, data.password, (err, response) => {
+
+                        if (!response) {
+                            res.status(401).json({
+                                message: "The old password is wrong"
+                            });
+                        } else {
+                            bcrypt.genSalt(saltRounds, function (err, salt) {
+                                if (err) {
+                                    throw err
+                                } else {
+                                    bcrypt.hash(req.body.newpassword, salt, function (err, hash) {
+                                        if (err) {
+                                            throw err
+                                        } else {
+                                            const hashednewpassword = hash;
+
+                                            const d = new Driver({
+                                                username: data.username,
+                                                email: data.email,
+                                                passwordhash: hashednewpassword
+                                            });
+                                            Driver.updatePasswordById(
+                                                req.params.driverId,
+                                                hashednewpassword,
+                                                (err, data) => {
+
+                                                    if (err) {
+                                                        if (err.kind === "not_found") {
+                                                            res.status(404).send({
+                                                                message: `Not found Driver with id ${req.params.driverId}.`
+                                                            });
+                                                        } else {
+                                                            res.status(500).send({
+                                                                message: "Error updating Driver with id " + req.params.driverId
+                                                            });
+                                                        }
+                                                    } else res.send(data);
+                                                }
+                                            );
+                                        }
+                                    });
+                                }
+                            });
+
+
+
+                        }
+
+
+                    });
+                }
+            });
+
+        }
+
+
+
+    });
 };
 
-exports.deleteAll = (req, res) => {
-  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
-  if(req.decoded.admin==false){
-    return res.status(401);
-  }
-  */
-  Driver.removeAll((err, data) => {
-    if (err)
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while removing all drivers."
-      });
-    else res.send({ message: `All drivers were deleted successfully!` });
-  });
->>>>>>> DB-SERVER-API
+exports.recoveryPassword = (req, res) => {
+    Driver.findByEmailOrUsername(req.body.email, null, (err, driver) => {
+
+
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                    message: `Not found driver with id ${req.params.driverId}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: "Error retrieving driver with id " + req.params.driverId
+                });
+            }
+        } else {
+
+            getDriver = driver;
+
+
+
+            bcrypt.genSalt(saltRounds, function (err, salt) {
+                if (err) {
+                    throw err
+                } else {
+                    let newpassword = randomstring.generate({
+                        length: 8,
+                        charset: 'alphabetic'
+                    });
+                    bcrypt.hash(newpassword, salt, function (err, hash) {
+                        if (err) {
+                            throw err
+                        } else {
+                            const hashednewpassword = hash;
+                            const d = new Driver({
+                                username: getDriver.username,
+                                email: getDriver.email,
+                                passwordhash: hashednewpassword
+                            });
+
+                            Driver.updatePasswordById(
+                                getDriver.idDriver,
+                                hashednewpassword,
+                                (err, data) => {
+
+                                    if (err) {
+                                        if (err.kind === "not_found") {
+                                            res.status(403).send({
+                                                message: `Not found Driver with id ${req.params.driverId}.`
+                                            });
+                                        } else {
+                                            res.status(501).send({
+                                                message: "Error updating Driver with id " + req.params.driverId
+                                            });
+                                        }
+                                    } else {
+                                        let mailData = { subject: "Nuova password", text: "La tua nuova password è: " };
+                                        let transporter = nodemailer.createTransport({
+                                            service: 'gmail',
+                                            auth: {
+                                                user: 'smartparkingNoreplyTestaspalla@gmail.com',
+                                                pass: 'Smartparking'
+                                            }
+                                        });
+                                        let mailOptions = {
+                                            from: 'smartparkingNoreplyTestaspalla@gmail.com',
+                                            to: d.email,
+                                            subject: mailData.subject,
+                                            text: mailData.text + newpassword
+                                        };
+                                        transporter.sendMail(mailOptions, function (error, info) {
+                                            if (error) {
+                                                res.status(400); //error
+                                            } else {
+                                                res.send(data).status(200); //success
+                                            }
+
+
+                                        });
+
+                                    }
+                                }
+
+
+                            );
+
+
+
+
+                        }
+                    });
+                }
+
+            });
+        }
+    });
+
 };

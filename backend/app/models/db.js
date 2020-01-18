@@ -3,7 +3,8 @@ const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'root',
-    database: 'smartparking'
+    database: 'smartparking',
+    multipleStatements: true
 });
 connection.connect((err) => {
     if (err) throw err;
