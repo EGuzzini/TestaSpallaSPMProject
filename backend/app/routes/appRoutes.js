@@ -20,7 +20,8 @@ router.delete("/parking/:parkingId", check.checkToken, parkingslot.delete);
 router.delete("/parking", check.checkToken, parkingslot.deleteAll);
 // nearest park to destination
 router.get("/parkingnearest/:destination", parkingslot.nearest);
-
+// Retrieve a single Parking slot with parkingId
+router.get("/parking/notification/:parkingId",parkingslot.notification );
 
 
 // routes for driver

@@ -1,7 +1,7 @@
 const Parkingslot = require("../models/parkingModels.js");
-const sql = require("../models/db.js");
 const request = require('request');
 const LatLon = require('../../node_modules/geodesy/latlon-spherical.js');
+const send = require("../controller/mailSender.js");
 exports.create = (req, res) => {
 
   /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
@@ -152,6 +152,33 @@ exports.findOne = (req, res) => {
   });
 };
 
+//simula il cambio di status del parcheggio a occupato, se il parcheggio non era prenotato invia una notifica alla polizia municipale
+exports.notification = (req, res) => {
+  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
+  if(req.decoded.admin==false){
+    return res.status(401);
+  }
+  */
+  Parkingslot.findById(req.params.parkingId, (err, data) => {
+
+    console.log(req.params.parkingId + " parking id");
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Parking with id ${req.params.parkingId}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving Parking with id " + req.params.parkingId
+        });
+      }
+    }
+   
+    if (data.status == 0) {
+      send.notification(req.params.parkingId);
+    }
+  });
+};
 
 exports.update = (req, res) => {
   /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi

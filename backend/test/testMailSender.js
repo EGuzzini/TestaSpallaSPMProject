@@ -14,7 +14,7 @@ describe("Server!", () => {
                 expect(res).to.have.status(200);
                 done();
             });
-    });
+    });/*
     describe("POST\User", () => {
         it('it should POST a user ', (done) => {
             let user = {
@@ -35,12 +35,12 @@ describe("Server!", () => {
 
 
         });
-    });
+    });*/
     describe("Driver login", () => {
         it('user login ', (done) => {
             let user = {
-                username: "dante",
-                email: "dd@gmail.it",
+                username: "Guzzo",
+                email: "sam",
                 password: "samuele"
             }
 
@@ -105,7 +105,7 @@ describe("Server!", () => {
                 });
             done();
         });
-    });
+    });/*
     describe('/DELETE/ALL', () => {
         it('it should DELETE all users', (done) => {
             chai.request(app)
@@ -117,5 +117,5 @@ describe("Server!", () => {
 
                 });
         });
-    });
+    });*/
 });
