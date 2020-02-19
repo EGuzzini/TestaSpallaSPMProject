@@ -3,11 +3,11 @@
 //create park
 POST http://localhost:80/parking HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImFkbWluIjpmYWxzZSwiaWF0IjoxNTc4NTY5MjE5LCJleHAiOjE1Nzg1NzA0MTl9.KPXHnnFJNP6kVlccGSYGAsZUd1yudN9z0LzcNSDwazw
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImRyaXZlcklkIjo0NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1ODE5NDg2MjEsImV4cCI6MTU4MTk0OTgyMX0.NalbP7rI7OFod91tU8PfRKSYSqchs2OvL72pTKQ2gkI
 
 {
     "status": 0,
-    "coord": "13.073204,43.140008",
+    "coord": "13.073208,43.140010",
     "comune": "montecassiano",
     "costoorario": 6.3
 }
@@ -44,12 +44,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsI
 ###
 
 //get nearest by id
-GET http://localhost:80/parkingnearest/13.075009882450104,43.13747491759089 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImFkbWluIjpmYWxzZSwiaWF0IjoxNTc4NTY2OTk2LCJleHAiOjE1Nzg1NjgxOTZ9.JAdxE1Kdh6Rd6YIWcBfR5eMbRwQ-Y3Zz9I2GsjMNJXg
+GET http://localhost:80/parkingnearest/13.06775,43.14247 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImRyaXZlcklkIjo0NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1ODIwMTg1MTEsImV4cCI6MTU4MjAxOTcxMX0.AQllg5ZxDAyse0iNFyUVdam49mCnMuaQdte7RaKo78Y
 ###
 ###
 //notification for municipality police simulating parking sensor by id
 GET http://localhost:80/parking/notification/126 HTTP/1.1
+###
+//get cancellation
+GET http://localhost:80/parkingnearest/cancellation/13.072338,43.137763 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImRyaXZlcklkIjo0NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1ODIwMTg1MTEsImV4cCI6MTU4MjAxOTcxMX0.AQllg5ZxDAyse0iNFyUVdam49mCnMuaQdte7RaKo78Y
 ###
 
 //DRIVER EXAMPLE

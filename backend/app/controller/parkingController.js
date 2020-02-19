@@ -28,7 +28,7 @@ exports.create = (req, res) => {
   console.log(xy);
   console.log('------------------------------------');
   Parkingslot.findByPosition(xy[0], xy[1], (err, data) => {
-    console.log(data + " ciao");
+    console.log(JSON.stringify(data) + " ciao");
     if (data !== null) {
       res.status(404).send({
         message: `already exist a Parking with coord ${ps.coord} .`
@@ -69,7 +69,7 @@ exports.nearest = (req, res) => {
           console.log(p2)
           const d = LatLon.distanceTo(dest, p2)
           console.log(d)
-          if (d < 1000 && data[key].status != 1) {
+          if (d < 1000 && data[key].status == 0) {
             coordparcheggiCinque.push(data[key].coord);
             count++;
             indici.push(count);
@@ -77,7 +77,7 @@ exports.nearest = (req, res) => {
         }
       }
       if (coordparcheggiCinque.length == 0) {
-        res.status(404).send({
+        return res.status(404).send({
           message: `not found a free park .`
         });
       }
@@ -102,9 +102,42 @@ exports.nearest = (req, res) => {
         }
         var minimo = Math.min.apply(null, array);
         var indiceMin = array.indexOf(minimo);
-        //                console.log(body.body.sources[indiceMin].location); //questo
-        res.send(body.body.sources[indiceMin].location);
+        console.log(body.body.sources[indiceMin].location); //questo
 
+
+
+        Parkingslot.findByPosition(body.body.sources[indiceMin].location[0], body.body.sources[indiceMin].location[1], (err, data) => {
+          if (data == null) {
+            res.status(400).send({
+              message: `park not found .`
+            });
+          } else {
+            parcheggio = new Parkingslot(data);
+            parcheggio.status = 1;
+            console.log(data.idparkingslot + " parcheggio")
+            Parkingslot.updateById(data.idparkingslot, parcheggio,
+              (err, data) => {
+                if (err) {
+                  if (err.kind === "not_found") {
+                    res.status(404).send({
+                      message: `Not found Parking slot with id.`
+                    });
+                  } else {
+                    res.status(500).send({
+                      message: "Error updating Customer with id "
+                    });
+                  }
+                }else {
+                  console.log(body.body.sources[indiceMin].location)
+                  res.send(body.body.sources[indiceMin].location);
+                }
+
+              }
+            );
+          }
+        });
+        //console.log("porca madonna "+body.body.sources[indiceMin].location)
+        
       });
     }
 
@@ -173,7 +206,7 @@ exports.notification = (req, res) => {
         });
       }
     }
-   
+
     if (data.status == 0) {
       send.notification(req.params.parkingId);
     }
@@ -217,6 +250,39 @@ exports.update = (req, res) => {
   );
 };
 
+exports.cancel = (req, res) => {
+  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
+  if(req.decoded.admin==false){
+    return res.status(401);
+  }
+  */
+  var xy = req.params.park.split(',');
+  Parkingslot.findByPosition(xy[0], xy[1], (err, data) => {
+    if (data == null) {
+      res.status(400).send({
+        message: `park not found .`
+      });
+    } else {
+      parcheggio = new Parkingslot(data);
+      parcheggio.status = 0;
+      Parkingslot.updateById(data.idparkingslot, parcheggio,
+        (err, data) => {
+          if (err) {
+            if (err.kind === "not_found") {
+              res.status(404).send({
+                message: `Not found Parking slot with id ${req.params.parkingId}.`
+              });
+            } else {
+              res.status(500).send({
+                message: "Error updating Customer with id " + req.params.parkingId
+              });
+            }
+          } else res.send(data);
+        }
+      );
+    }
+  });
+};
 exports.delete = (req, res) => {
   /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
   if(req.decoded.admin==false){

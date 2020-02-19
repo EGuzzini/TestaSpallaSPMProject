@@ -20,9 +20,10 @@ router.delete("/parking/:parkingId", check.checkToken, parkingslot.delete);
 router.delete("/parking", check.checkToken, parkingslot.deleteAll);
 // nearest park to destination
 router.get("/parkingnearest/:destination", parkingslot.nearest);
-// Retrieve a single Parking slot with parkingId
+// send notification to municipality police for unauthorized parking
 router.get("/parking/notification/:parkingId",parkingslot.notification );
-
+//cancellation of park reserved
+router.get("/parkingnearest/cancellation/:park", parkingslot.cancel);
 
 // routes for driver
 //create a new user
