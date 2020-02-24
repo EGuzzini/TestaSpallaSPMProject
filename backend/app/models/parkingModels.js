@@ -1,6 +1,5 @@
 const sql = require("./db.js");
 
-
 // constructor campi della tabella parking slot del database
 const Parkingslot = function (ps) {
 
@@ -17,7 +16,6 @@ Parkingslot.create = (newparkingslot, result) => {
       result(err, null);
       return;
     }
-
     console.log("created parking slot: ", { ...newparkingslot });
     result(null, { ...newparkingslot });
   });
@@ -30,23 +28,18 @@ Parkingslot.findById = (parkingId, result) => {
       result(err, null);
       return;
     }
-
     if (res.length) {
       console.log("found parking slot: ", res[0]);
       result(null, res[0]);
       return;
     }
-
     // not found parking slot with the id
     result({ kind: "not_found" }, null);
   });
 };
 
 
-
 Parkingslot.findByPosition = (x, y, result) => {
-
-
   sql.query(`SELECT * FROM parkingslot WHERE SUBSTRING_INDEX(coord, ',', 1) =${x} AND SUBSTRING_INDEX(coord, ',', -1) =${y}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -59,7 +52,6 @@ Parkingslot.findByPosition = (x, y, result) => {
       result(null, res[0]);
       return;
     }
-
     // not found parking slot with the id
     result({ kind: "not_found" }, null);
   });
@@ -71,7 +63,6 @@ Parkingslot.getAll = (result) => {
       result(null, err);
       return;
     }
-
     console.log("parking slots: ", res);
     result(null, res);
   });
@@ -84,16 +75,14 @@ Parkingslot.updateById = (id, parkingslot, result) => {
     (err, res) => {
       if (err) {
         console.log("error: ", err);
-        result(null, err);
+        result({ kind: "not_found" }, err);
         return;
       }
-
       if (res.affectedRows == 0) {
         // not found parking slot with the id
         result({ kind: "not_found" }, null);
         return;
       }
-
       console.log("updated parking slot: ", { ...parkingslot });
       result(null, { ...parkingslot });
     }
@@ -107,13 +96,11 @@ Parkingslot.remove = (id, result) => {
       result(null, err);
       return;
     }
-
     if (res.affectedRows == 0) {
       // not found parkingslot with the id
       result({ kind: "not_found" }, null);
       return;
     }
-
     console.log("deleted parkingslot with id: ", id);
     result(null, res);
   });
@@ -131,7 +118,5 @@ Parkingslot.removeAll = result => {
     result(null, res);
   });
 };
-
-
 
 module.exports = Parkingslot;

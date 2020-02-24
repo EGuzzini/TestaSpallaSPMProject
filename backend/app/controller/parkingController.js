@@ -24,9 +24,6 @@ exports.create = (req, res) => {
     costoorario: req.body.costoorario
   });
   var xy = ps.coord.split(',');
-  console.log('------------------------------------');
-  console.log(xy);
-  console.log('------------------------------------');
   Parkingslot.findByPosition(xy[0], xy[1], (err, data) => {
     console.log(JSON.stringify(data) + " ciao");
     if (data !== null) {
@@ -44,13 +41,10 @@ exports.create = (req, res) => {
       });
     }
   });
-
-
 };
 //da inserire il controllo per il parcheggio libero
 exports.nearest = (req, res) => {
   //chiamata alla funzione del model per il parcheggio più vicino
-  //var destination = "13.075009882450104,43.13747491759089";
   var destination = req.params.destination;
   Parkingslot.getAll((err, data) => {
     if (err)
@@ -127,7 +121,7 @@ exports.nearest = (req, res) => {
                       message: "Error updating Customer with id "
                     });
                   }
-                }else {
+                } else {
                   console.log(body.body.sources[indiceMin].location)
                   res.send(body.body.sources[indiceMin].location);
                 }
@@ -137,7 +131,7 @@ exports.nearest = (req, res) => {
           }
         });
         //console.log("porca madonna "+body.body.sources[indiceMin].location)
-        
+
       });
     }
 
@@ -145,7 +139,6 @@ exports.nearest = (req, res) => {
   });
 
 }
-
 
 exports.findAll = (req, res) => {
   /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
@@ -226,27 +219,19 @@ exports.update = (req, res) => {
     });
   }
   console.log(req.params.parkingId);
-
-
-  Parkingslot.updateById(
-
-
-    req.params.parkingId,
-    new Parkingslot(req.body),
-    (err, data) => {
-
-      if (err) {
-        if (err.kind === "not_found") {
-          res.status(404).send({
-            message: `Not found Parking slot with id ${req.params.parkingId}.`
-          });
-        } else {
-          res.status(500).send({
-            message: "Error updating Customer with id " + req.params.parkingId
-          });
-        }
-      } else res.send(data);
-    }
+  Parkingslot.updateById(req.params.parkingId, new Parkingslot(req.body), (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Parking slot with id ${req.params.parkingId}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error updating Customer with id " + req.params.parkingId
+        });
+      }
+    } else res.send(data);
+  }
   );
 };
 
