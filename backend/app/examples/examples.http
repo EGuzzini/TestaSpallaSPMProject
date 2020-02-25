@@ -16,7 +16,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImRyaXZl
 GET http://localhost:80/ HTTP/1.1
 ###
 //update park
-PUT http://localhost:8080/parking/10 HTTP/1.1
+PUT http://localhost:80/parking/10 HTTP/1.1
 content-type: application/json
 
 {
@@ -28,32 +28,39 @@ content-type: application/json
 ###
 
 //remove park
-DELETE http://localhost:8080/parking/10 HTTP/1.1
+DELETE http://localhost:80/parking/133 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImRyaXZlcklkIjo0NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1ODIyMDU0MDEsImV4cCI6MTU4MjIwNjYwMX0.AplICz-EEoZB5cwXKSH_a1WF8jHb-2ouUm6kAdqYSXQ
 ###
 
 //get all park
 GET http://localhost:80/parking HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImFkbWluIjpmYWxzZSwiaWF0IjoxNTc4NTY2OTk2LCJleHAiOjE1Nzg1NjgxOTZ9.JAdxE1Kdh6Rd6YIWcBfR5eMbRwQ-Y3Zz9I2GsjMNJXg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImRyaXZlcklkIjo0NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1ODIyMDU0MDEsImV4cCI6MTU4MjIwNjYwMX0.AplICz-EEoZB5cwXKSH_a1WF8jHb-2ouUm6kAdqYSXQ
 ###
+
 //get park by id
 GET http://localhost:80/parking/26 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImRyaXZlcklkIjo0NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1ODIyMDU0MDEsImV4cCI6MTU4MjIwNjYwMX0.AplICz-EEoZB5cwXKSH_a1WF8jHb-2ouUm6kAdqYSXQ
 ###
+
 //delete all park
 DELETE http://localhost:80/parking HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImFkbWluIjpmYWxzZSwiaWF0IjoxNTc4NDc2OTIyLCJleHAiOjE1Nzg0NzgxMjJ9.g6Pesvnr5KF3TrFa1CyEbAqw12cTdQtkVmsZNkkamc8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImRyaXZlcklkIjo0NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1ODIyMDU0MDEsImV4cCI6MTU4MjIwNjYwMX0.AplICz-EEoZB5cwXKSH_a1WF8jHb-2ouUm6kAdqYSXQ
 ###
 
 //get nearest by id
 GET http://localhost:80/parkingnearest/13.06775,43.14247 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImRyaXZlcklkIjo0NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1ODIwMTg1MTEsImV4cCI6MTU4MjAxOTcxMX0.AQllg5ZxDAyse0iNFyUVdam49mCnMuaQdte7RaKo78Y
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImRyaXZlcklkIjo0NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1ODIyMDU0MDEsImV4cCI6MTU4MjIwNjYwMX0.AplICz-EEoZB5cwXKSH_a1WF8jHb-2ouUm6kAdqYSXQ
 ###
-###
+
+
 //notification for municipality police simulating parking sensor by id
 GET http://localhost:80/parking/notification/126 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImRyaXZlcklkIjo0NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1ODIyMDU0MDEsImV4cCI6MTU4MjIwNjYwMX0.AplICz-EEoZB5cwXKSH_a1WF8jHb-2ouUm6kAdqYSXQ
 ###
+
 //get cancellation
 GET http://localhost:80/parkingnearest/cancellation/13.072338,43.137763 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImRyaXZlcklkIjo0NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1ODIwMTg1MTEsImV4cCI6MTU4MjAxOTcxMX0.AQllg5ZxDAyse0iNFyUVdam49mCnMuaQdte7RaKo78Y
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImRyaXZlcklkIjo0NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1ODIyMDU0MDEsImV4cCI6MTU4MjIwNjYwMX0.AplICz-EEoZB5cwXKSH_a1WF8jHb-2ouUm6kAdqYSXQ
 ###
 
 //DRIVER EXAMPLE
@@ -88,13 +95,9 @@ GET http://localhost:80/users/44 HTTP/1.1
 //delete all drivers
 DELETE http://localhost:80/users HTTP/1.1
 ###
-//remove driver by id
+//remove driver account logged with id from the token
 DELETE http://localhost:80/usersid HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImRyaXZlcklkIjo0MywiYWRtaW4iOmZhbHNlLCJpYXQiOjE1NzkwOTc1NzksImV4cCI6MTU3OTA5ODc3OX0.0A85eKjO-K3PrCqIFxpb1wFMolwnFJ7Egpqe8WRXKJE
-###
-
-//get all drivers
-GET https://api.mapbox.com/directions-matrix/v1/mapbox/walking/13.075009882450104,43.13747491759089;13.068293631076813,43.139578923782565;13.0,43.139?sources=1;2&destinations=0&access_token=pk.eyJ1Ijoid2lsbGlhbTk2IiwiYSI6ImNrNTN3YXJ2MDBidWIzZ2s2cWpubHhwcG0ifQ.bUTnoo7Hqb193F8MthF0uw HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImRyaXZlcklkIjo0NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1ODIyMDU0MDEsImV4cCI6MTU4MjIwNjYwMX0.AplICz-EEoZB5cwXKSH_a1WF8jHb-2ouUm6kAdqYSXQ
 ###
 
 POST http://localhost:80/users/44/report HTTP/1.1
