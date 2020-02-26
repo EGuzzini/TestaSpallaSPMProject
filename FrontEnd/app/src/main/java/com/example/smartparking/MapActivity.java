@@ -162,7 +162,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 editor.putString("DESTINATIONLONG", Double.toString(provaa.latitude()));
                 editor.putString("DESTINATIONLAT", Double.toString(provaa.longitude()));
                 editor.apply();
-               startActivity(navigate);
+                startActivity(navigate);
             }
         });
         ORIGIN = Point.fromLngLat(Longitude, Latitude);
@@ -176,7 +176,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mLocationRequest.setInterval(0);
         mLocationRequest.setFastestInterval(0);
         mLocationRequest.setNumUpdates(1);
-
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mFusedLocationClient.requestLocationUpdates(
                 mLocationRequest, mLocationCallback,
@@ -202,10 +201,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent help = new Intent(this, ReportActivity.class);
+        Intent changepassword = new Intent(this, AccountActivity.class);
         Intent login = new Intent(this, LoginActivity.class);
         int id = item.getItemId();
         if (id == R.id.account) {
-
+            startActivity(changepassword);
         }
         if (id == R.id.help) {
             startActivity(help);

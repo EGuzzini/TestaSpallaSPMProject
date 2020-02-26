@@ -1,5 +1,6 @@
 package com.example.smartparking
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.StrictMode
@@ -76,9 +77,13 @@ class RegisterActivity : AppCompatActivity() {
                     e.printStackTrace()
                 }
             } else {
-                Toast.makeText(this, "Password not matching, please check", Toast.LENGTH_SHORT)
+                Toast.makeText(this, "Password not matching, please check.", Toast.LENGTH_SHORT)
                     .show()
             }
+            Toast.makeText(this, "Account created. Please Log-in.", Toast.LENGTH_SHORT)
+                .show()
+            val regact = Intent(this, LoginActivity::class.java)
+            startActivity(regact)
         }
     }
 }
