@@ -108,18 +108,18 @@ describe("Server!", () => {
                 });
 
         });
-        /* it("try to GET a user given the wrong id'", done => {
-             let id = 0;
-             chai.request(app)
-                 .get('/users/' + id)
-                 .set('Authorization', 'Bearer ' + token)
-                 .end((err, res) => {
-                     expect(res).to.have.status(404);
-                     expect(res.body.message).to.equals("Not found driver with id " + id + ".");
-                     done();
-                 });
+        it("try to GET a user given the wrong id'", done => {
+            let id = 0;
+            chai.request(app)
+                .get('/users/' + id)
+                .set('Authorization', 'Bearer ' + token)
+                .end((err, res) => {
+                    expect(res).to.have.status(404);
+                    expect(res.body.message).to.equals("Not found driver with id " + id + ".");
+                    done();
+                });
 
-         });*/
+        });
     });
     describe('/PUT/:id', () => {
         it("it should UPDATE a user given the id'", done => {
@@ -144,7 +144,27 @@ describe("Server!", () => {
                 });
 
         });
-        /*
+        it('user login after the change of data ', (done) => {
+            let user = {
+                username: "dantedomizi",
+                email: "dante.domizi@studenti.unicam.it",
+                password: "samuele"
+            }
+
+            chai.request(app)
+                .post('/login')
+                .send(user)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('jwtToken');
+                    token = res.body.jwtToken;
+                    done();
+
+                });
+
+
+        });
+
         it("it should change user password", done => {
             let password = {
 
@@ -152,25 +172,41 @@ describe("Server!", () => {
                 newpassword: "samfiore"
             }
             chai.request(app)
-                .put('/users/' + userId + '/changePassword')
+                .post('/users/changePassword')
                 .set('Authorization', 'Bearer ' + token)
                 .send(password)
                 .end((err, res) => {
 
                     expect(res).to.have.status(200);
-
-                    //expect(res.body).to.have.property('username', "dantedomizi");
-                    // expect(res.body).to.have.property('email', "dante.domizi@studenti.unicam.it");
-
-
                     done();
                 });
-        });*/
+        });
+        it('user login after the change of data ', (done) => {
+            let user = {
+                username: "dantedomizi",
+                email: "dante.domizi@studenti.unicam.it",
+                password: "samfiore"
+            }
+
+            chai.request(app)
+                .post('/login')
+                .send(user)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('jwtToken');
+                    token = res.body.jwtToken;
+                    done();
+
+                });
+
+
+        });
+
         it("try to UPDATE a user given the wrong id'", done => {
             let user = {
                 username: "dantedomizi",
                 email: "dante.domizi@studenti.unicam.it",
-                password: "samuele"
+                password: "samfiore"
             }
             let id = 0;
             chai.request(app)
@@ -198,23 +234,22 @@ describe("Server!", () => {
                 email: "dante.domizi@studenti.unicam.it"
             }
             chai.request(app)
-                .put("/passwordReset")
+                .post("/passwordReset")
                 .send(email)
-                .end((err, res) => {
-                    expect(res).to.have.status(200);
 
-                    console.log('------------------------------------');
-                    console.log(res.body);
-                    console.log('------------------------------------');
-                    done();
-                });
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+
+
+                done();
+            });
         });
     });
     describe('/DELETE/:id', () => {
         it('it should DELETE a user given the id', (done) => {
 
             chai.request(app)
-                .delete('/users/' + userId)
+                .delete('/usersid')
                 .set('Authorization', 'Bearer ' + token)
                 .end((err, res) => {
                     expect(res).to.have.status(200);
@@ -229,7 +264,9 @@ describe("Server!", () => {
                 .set('Authorization', 'Bearer ' + token)
                 .end((err, res) => {
                     expect(res).to.have.status(404);
-                    expect(res.body.message).to.equals("Not found Parking slot with id " + id + ".");
+
+
+
                     done();
                 });
         });

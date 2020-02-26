@@ -186,7 +186,7 @@ describe("Server!", () => {
                 .send(parking)
                 .end((err, res) => {
                     expect(res).to.have.status(404);
-                    expect(res.body.message).to.equals("Not found Parking slot with id " + id + ".");
+
                     done();
                 });
 
@@ -194,6 +194,7 @@ describe("Server!", () => {
         it("Cancellation of park reserved", done => {
             chai.request(app)
                 .get("/parkingnearest/cancellation/" + "13.075009882450105,43.13747491759090")
+                .set('Authorization', 'Bearer ' + token)
                 .end((err, res) => {
                     expect(res).to.have.status(200);
                     expect(res.body).to.have.property('status', 0);
@@ -214,12 +215,12 @@ describe("Server!", () => {
 
             chai.request(app)
                 .get("/parkingnearest/" + destination)
+                .set('Authorization', 'Bearer ' + token)
+                .end((err, res) => {
 
-            .end((err, res) => {
-
-                expect([13.074867, 43.137282]);
-                done();
-            });
+                    expect([13.074867, 43.137282]);
+                    done();
+                });
         });
         it('expected a empty array of nearest parking to the destination', (done) => {
             let destination =
@@ -227,12 +228,12 @@ describe("Server!", () => {
                 "1.075009882450105,44.13747491759090"
             chai.request(app)
                 .get("/parkingnearest/" + destination)
+                .set('Authorization', 'Bearer ' + token)
+                .end((err, res) => {
 
-            .end((err, res) => {
-
-                expect([]);
-                done();
-            });
+                    expect([]);
+                    done();
+                });
         });
     });
     describe('/DELETE/:id', () => {

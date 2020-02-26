@@ -120,12 +120,13 @@ describe("Server!", () => {
 
     describe("MailSender!", () => {
         it("Try to send an email for report a problem", (done) => {
+
             let email = {
                 subject: "email di prova",
                 text: "test email"
             }
             chai.request(app)
-                .post('/users/' + userId + '/report')
+                .post('/users/report')
                 .set('Authorization', 'Bearer ' + token)
                 .send(email)
                 .end((err, res) => {
@@ -141,7 +142,7 @@ describe("Server!", () => {
 
             }
             chai.request(app)
-                .post('/users/' + userId + '/report')
+                .post('/users/report')
                 .set('Authorization', 'Bearer ' + token)
                 .send(email)
                 .end((err, res) => {
@@ -153,9 +154,10 @@ describe("Server!", () => {
         });
     });
     describe("Police notification!", () => {
-        it("it should return status 400 ", (done) => {
+        it("Police notification! ", (done) => {
             chai.request(app)
                 .get('/parking/notification/' + parkingId)
+                .set('Authorization', 'Bearer ' + token)
                 .end((err, res) => {
                     expect(res).to.have.status(200);
 
