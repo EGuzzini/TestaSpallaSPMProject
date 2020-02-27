@@ -7,6 +7,7 @@ const Parkingslot = function (ps) {
   this.coord = ps.coord;
   this.comune = ps.comune;
   this.costoorario = ps.costoorario;
+  this.emailDriver=ps.emailDriver;
 };
 
 Parkingslot.create = (newparkingslot, result) => {
@@ -70,8 +71,8 @@ Parkingslot.getAll = (result) => {
 
 Parkingslot.updateById = (id, parkingslot, result) => {
   sql.query(
-    "UPDATE parkingslot SET status = ?, coord =? ,comune = ?, costoorario=? WHERE idparkingslot = ?",
-    [parkingslot.status, parkingslot.coord, parkingslot.comune, parkingslot.costoorario, id],
+    "UPDATE parkingslot SET status = ?, coord =? ,comune = ?, costoorario=?, emailDriver=? WHERE idparkingslot = ?",
+    [parkingslot.status, parkingslot.coord, parkingslot.comune, parkingslot.costoorario,parkingslot.emailDriver, id],
     (err, res) => {
       if (err) {
         console.log("error: ", err);

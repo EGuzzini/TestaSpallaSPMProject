@@ -49,7 +49,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsI
 
 //get nearest by id
 GET http://localhost:80/parkingnearest/13.06775,43.14247 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImRyaXZlcklkIjo0NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1ODIyMDU0MDEsImV4cCI6MTU4MjIwNjYwMX0.AplICz-EEoZB5cwXKSH_a1WF8jHb-2ouUm6kAdqYSXQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImRyaXZlcklkIjo0NiwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1ODI4MDE2MjIsImV4cCI6MTU4MjgwMjgyMn0.2pBFr1rwmO1EeurwMhoQqjV3ht6ICq3WWWqlURAVJzM
 ###
 
 
@@ -59,8 +59,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsI
 ###
 
 //get cancellation
-GET http://localhost:80/parkingnearest/cancellation/13.072338,43.137763 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImRyaXZlcklkIjo0NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1ODIyMDU0MDEsImV4cCI6MTU4MjIwNjYwMX0.AplICz-EEoZB5cwXKSH_a1WF8jHb-2ouUm6kAdqYSXQ
+GET http://localhost:80/parkingnearest/cancellation/13.066519,43.139471 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImRyaXZlcklkIjo0NiwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1ODI4MDE2MjIsImV4cCI6MTU4MjgwMjgyMn0.2pBFr1rwmO1EeurwMhoQqjV3ht6ICq3WWWqlURAVJzM
 ###
 
 //DRIVER EXAMPLE
