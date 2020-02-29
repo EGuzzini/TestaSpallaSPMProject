@@ -11,5 +11,4 @@
         android:layout_height="match_parent"
         app:navigationLightTheme="@style/NavigationViewLight"
         app:navigationDarkTheme="@style/NavigationViewDark"/>
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

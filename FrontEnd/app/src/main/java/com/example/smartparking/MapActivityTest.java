@@ -2,19 +2,17 @@ package com.example.smartparking;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.*;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.mapbox.api.directions.v5.models.BannerInstructions;
@@ -22,13 +20,8 @@ import com.mapbox.api.directions.v5.models.DirectionsResponse;
 import com.mapbox.api.directions.v5.models.DirectionsRoute;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.services.android.navigation.ui.v5.NavigationView;
-import com.mapbox.services.android.navigation.ui.v5.NavigationViewOptions;
-import com.mapbox.services.android.navigation.ui.v5.OnNavigationReadyCallback;
-import com.mapbox.services.android.navigation.ui.v5.listeners.BannerInstructionsListener;
-import com.mapbox.services.android.navigation.ui.v5.listeners.InstructionListListener;
-import com.mapbox.services.android.navigation.ui.v5.listeners.NavigationListener;
-
+import com.mapbox.services.android.navigation.ui.v5.*;
+import com.mapbox.services.android.navigation.ui.v5.listeners.*;
 import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute;
 import com.mapbox.services.android.navigation.v5.routeprogress.ProgressChangeListener;
 import com.mapbox.services.android.navigation.v5.routeprogress.RouteProgress;
@@ -55,13 +48,14 @@ public class MapActivityTest extends AppCompatActivity implements OnNavigationRe
     private static Point ORIGIN;
     private double Duration;
     Point DESTINATION;
-    Point DESTINATIONE;
-    Point ORIGINE;
-    int i=0;
-    String data=null;
+    Point origi;
+    Point destina;
+
+    int i = 0;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         SharedPreferences POINTS = this.getSharedPreferences(PREF_NAME, 0);
+        final String tokenget= POINTS.getString("token", "defvalue");
         String DestinationLat = POINTS.getString("DESTINATIONLAT", "defvalue");
         String DestinationLong = POINTS.getString("DESTINATIONLONG", "defvalue");
         Double DestLat = Double.parseDouble(DestinationLat);
@@ -91,12 +85,10 @@ public class MapActivityTest extends AppCompatActivity implements OnNavigationRe
                         .shouldSimulateRoute(true)
                         .instructionListListener(this)
                         .bannerInstructionsListener(this);
-
-
         navigationView.startNavigation(options.build());
-
     }
-    private void getorigin(){
+
+    private void getorigin() {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mFusedLocationClient.getLastLocation().addOnCompleteListener(
                 new OnCompleteListener<Location>() {
@@ -108,7 +100,7 @@ public class MapActivityTest extends AppCompatActivity implements OnNavigationRe
                         } else {
                             Double Latitude = location.getLatitude();
                             Double Longitude = location.getLongitude();
-                            ORIGINE = Point.fromLngLat(Longitude,Latitude);
+                            origi = Point.fromLngLat(Longitude, Latitude);
                         }
 
                     }
@@ -131,6 +123,7 @@ public class MapActivityTest extends AppCompatActivity implements OnNavigationRe
         );
 
     }
+
     private LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -139,12 +132,12 @@ public class MapActivityTest extends AppCompatActivity implements OnNavigationRe
         }
     };
 
-    private void requestRoute() {
+    private void requestRoute(Point origin, Point destina) {
 
         NavigationRoute.builder(this)
                 .accessToken(getString(R.string.mapbox_code))
-                .origin(ORIGIN)
-                .destination(DESTINATION)
+                .origin(origin)
+                .destination(destina)
                 .alternatives(true)
                 .build()
                 .getRoute(new Callback<DirectionsResponse>() {
@@ -174,7 +167,7 @@ public class MapActivityTest extends AppCompatActivity implements OnNavigationRe
 
     @Override
     public void onNavigationReady(boolean isRunning) {
-        requestRoute();
+        requestRoute(ORIGIN, DESTINATION);
     }
 
     @Override
@@ -234,8 +227,32 @@ public class MapActivityTest extends AppCompatActivity implements OnNavigationRe
 
     @Override
     public void onCancelNavigation() {
-        finish();
+        if(destina!=null) {
+            SharedPreferences POINTSS = this.getSharedPreferences(PREF_NAME, 0);
+            final String tokengets = POINTSS.getString("token", "defvalue");
+            Log.d("somno", "hsoub");
+            String deslat = Double.toString(destina.latitude());
+            String deslong = Double.toString(destina.longitude());
+            String Des = deslong + "," + deslat;
+            Log.d("lat:", deslat);
+            Log.d("long:", deslong);
+            try {
+                URL curl = new URL(getString(R.string.connection) + "parkingnearest/cancellation/" + Des);
+                HttpURLConnection curlConnection = (HttpURLConnection) curl.openConnection();
+                curlConnection.setRequestProperty("Authorization", "Bearer " + tokengets);
+                curlConnection.connect();
+                InputStream inStream = null;
+                inStream = curlConnection.getInputStream();
+                curlConnection.disconnect();
 
+            } catch (Exception e) {
+
+            } finally {
+            }
+            finish();
+        }else{
+            finish();
+        }
     }
 
     @Override
@@ -246,6 +263,7 @@ public class MapActivityTest extends AppCompatActivity implements OnNavigationRe
     public void onNavigationRunning() {
 
     }
+
     private void fetchRoute(Point origin, Point destination) {
         NavigationRoute.builder(this)
                 .accessToken(Mapbox.getAccessToken())
@@ -254,69 +272,119 @@ public class MapActivityTest extends AppCompatActivity implements OnNavigationRe
                 .alternatives(true)
                 .build()
                 .getRoute(new Callback<DirectionsResponse>() {
-            @Override
-            public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
-                DirectionsRoute directionsRoute = response.body().routes().get(0);
-                startNavigation(directionsRoute);
-            }
+                    @Override
+                    public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
+                        DirectionsRoute directionsRoute = response.body().routes().get(0);
+                        startNavigation(directionsRoute);
+                    }
 
-            @Override
-            public void onFailure(Call<DirectionsResponse> call, Throwable t) {
+                    @Override
+                    public void onFailure(Call<DirectionsResponse> call, Throwable t) {
 
-            }
-        });
+                    }
+                });
     }
-    @Override
-    public void onProgressChange(Location location, RouteProgress routeProgress) {
-        Duration = routeProgress.durationRemaining();
+
+    public void navtopark() {
+        int controllo = 0;
         SharedPreferences POINTS = this.getSharedPreferences(PREF_NAME, 0);
         String DestinationLat = POINTS.getString("DESTINATIONLAT", "defvalue");
         String DestinationLong = POINTS.getString("DESTINATIONLONG", "defvalue");
-        String Destinazione= DestinationLat+","+DestinationLong;
-        Log.d("durata",Double.toString(Duration));
-        if (Duration < 300 && i==0) {
-            i=1;
-            Log.d("sono","qui");
-            HttpURLConnection urlConnection = null;
-            URL url = null;
-            InputStream inStream = null;
-            List<String> desti= null;
-            try {
+        String Destinazione = DestinationLat + "," + DestinationLong;
+        HttpURLConnection urlConnection = null;
+        URL url = null;
+        InputStream inStream = null;
+        List<String> desti = null;
+        try {
 
-                url = new URL(getString(R.string.connection)+"parkingnearest/"+Destinazione);
+            url = new URL(getString(R.string.connection) + "parkingnearest/" + Destinazione);
+            final String tokenget= POINTS.getString("token", "defvalue");
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestProperty("Authorization", "Bearer " +tokenget);
+            urlConnection.connect();
+            inStream = urlConnection.getInputStream();
+            BufferedReader bReader = new BufferedReader(new InputStreamReader(inStream));
+            String temp;
 
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.connect();
-                inStream = urlConnection.getInputStream();
-                BufferedReader bReader = new BufferedReader(new InputStreamReader(inStream));
-                String temp;
-                while ((temp = bReader.readLine()) != null) {
-                    temp=temp.substring(1,temp.length()-1);
-                    desti = Arrays.asList(temp.split(","));
-                }
+            while ((temp = bReader.readLine()) != null) {
+                temp = temp.substring(1, temp.length() - 1);
+                desti = Arrays.asList(temp.split(","));
+            }
+            destina = Point.fromLngLat(Double.parseDouble(desti.get(0)), Double.parseDouble(desti.get(1)));
+            getorigin();
 
-                onStop();
-                DESTINATIONE = Point.fromLngLat(Double.parseDouble(desti.get(0)),Double.parseDouble(desti.get(1)));
-                getorigin();
-                fetchRoute(ORIGINE,DESTINATIONE);
 
-            } catch (Exception e) {
-
-            } finally {
-                if (inStream != null) {
-                    try {
-                        inStream.close();
-                    } catch (IOException ignored) {
-                    }
-                }
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
+        } catch (Exception e) {
+            controllo = 1;
+        } finally {
+            if (inStream != null) {
+                try {
+                    inStream.close();
+                } catch (IOException ignored) {
                 }
             }
+            if (urlConnection != null) {
+                urlConnection.disconnect();
 
-
+            }
         }
+        if (controllo == 1) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
+            builder.setTitle("Parcheggio non trovato!");
+
+            builder.setMessage("Non è stato possibile trovare un parcheggio entro 1 km dalla destinazione");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                }
+            });
+            builder.show();
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setTitle("Parcheggio trovato!");
+
+            builder.setMessage("Vuoi prenotare e navigare verso il parcheggio?");
+            builder.setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    fetchRoute(origi, destina);
+                }
+            });
+            SharedPreferences POINTSS = this.getSharedPreferences(PREF_NAME, 0);
+            final String tokengets= POINTSS.getString("token", "defvalue");
+            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    String deslat = Double.toString(destina.latitude());
+                    String deslong = Double.toString(destina.longitude());
+                    String Des = deslong + "," + deslat;
+                    try {
+                        URL curl = new URL(getString(R.string.connection) + "parkingnearest/cancellation/" + Des);
+                        HttpURLConnection curlConnection = (HttpURLConnection) curl.openConnection();
+                        curlConnection.setRequestProperty("Authorization", "Bearer " + tokengets);
+                            curlConnection.connect();
+                        InputStream inStream = null;
+                        inStream = curlConnection.getInputStream();
+                        curlConnection.disconnect();
+
+                    } catch (Exception e) {
+
+                    }finally{
+                    }
+
+                }
+            });
+            builder.show();
+        }
+    }
+
+    @Override
+    public void onProgressChange(Location location, RouteProgress routeProgress) {
+        Duration = routeProgress.durationRemaining();
+        if (Duration < 300 && i == 0) {
+            i = 1;
+            navtopark();
         }
 
     }
+
+}

@@ -4,14 +4,12 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.StrictMode
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
-
 
 class MainActivity : AppCompatActivity() {
     private var prefs: SharedPreferences? = null
@@ -25,7 +23,6 @@ class MainActivity : AppCompatActivity() {
         StrictMode.setThreadPolicy(policy)
         val url = getString(R.string.connection)
         val urlObj = URL(url)
-
         val conn = urlObj.openConnection() as HttpURLConnection
         val tokenget = prefs!!.getString("token", "defvalue")
         conn.setRequestProperty("Authorization", "Bearer $tokenget")
@@ -45,9 +42,6 @@ class MainActivity : AppCompatActivity() {
                 finish()
             }
             conn.disconnect()
-
-
         }
-
     }
 }

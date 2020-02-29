@@ -1,6 +1,5 @@
 package com.example.smartparking
 
-
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.StrictMode
@@ -10,9 +9,7 @@ import kotlinx.android.synthetic.main.activity_add_parking.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.*
-import java.net.HttpURLConnection
-import java.net.URL
-import java.net.URLEncoder
+import java.net.*
 import java.util.*
 
 operator fun JSONArray.iterator(): Iterator<JSONObject> =
@@ -23,7 +20,6 @@ class AddParkingActivity : AppCompatActivity() {
     private val prefsname = "com.example.smartparking.prefs"
     override fun onCreate(savedInstanceState: Bundle?) {
         prefs = this.getSharedPreferences(prefsname, 0)
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_parking)
         val policy =

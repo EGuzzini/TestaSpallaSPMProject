@@ -7,7 +7,7 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_m">MActivity</string>
-    <string name="connection">https://3a02599a.ngrok.io/</string>
+    <string name="connection">https://3334b69c.ngrok.io/</string>
     <string name="Request_OK">200</string>
     <string name="mapbox_code">pk.eyJ1IjoiZ3V6em8iLCJhIjoiY2s1Z3JzOW1zMDFmMzNtcGVscXBwZm5tdSJ9.OfFlHQmH_WlqD3hdGfuoyw</string>
     <string-array name="report">

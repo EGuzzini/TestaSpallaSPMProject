@@ -5,10 +5,6 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.StrictMode
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_report.*
 import java.io.*
@@ -61,12 +57,14 @@ class ReportActivity : AppCompatActivity() {
                         i++
                     }
                     try {
-                        val url = getString(R.string.connection) + "report"
+                        val url = getString(R.string.connection) + "users/report"
                         val urlObj = URL(url)
                         val conn = urlObj.openConnection() as HttpURLConnection
                         conn.doOutput = true
                         conn.requestMethod = "POST"
                         conn.setRequestProperty("Accept-Charset", "UTF-8")
+                        val tokenget = prefs!!.getString("token", "defvalue")
+                        conn.setRequestProperty("Authorization", "Bearer $tokenget")
                         conn.readTimeout = 1500
                         conn.connectTimeout = 3000
                         conn.connect()
@@ -83,18 +81,7 @@ class ReportActivity : AppCompatActivity() {
                                 val result = StringBuilder()
                                 val tokenresult = StringBuilder()
                                 var line: String?
-                                while (reader.readLine().also { line = it } != null) {
-                                    result.append(line)
-                                }
-                                var j = 13
-                                do {
-                                    tokenresult.append(result[j])
-                                    j++
-                                } while (result[j] != '"')
-                                val token = tokenresult.toString()
-                                val editor: SharedPreferences.Editor = prefs!!.edit()
-                                editor.putString("token", token)
-                                editor.apply()
+
                             } catch (e: IOException) {
                                 e.printStackTrace()
                             } finally {
