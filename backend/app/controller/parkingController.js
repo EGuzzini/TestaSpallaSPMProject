@@ -1,7 +1,7 @@
 const Parkingslot = require("../models/parkingModels.js");
-const sql = require("../models/db.js");
 const request = require('request');
 const LatLon = require('../../node_modules/geodesy/latlon-spherical.js');
+const send = require("../controller/mailSender.js");
 exports.create = (req, res) => {
 
   /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
@@ -24,11 +24,8 @@ exports.create = (req, res) => {
     costoorario: req.body.costoorario
   });
   var xy = ps.coord.split(',');
-  console.log('------------------------------------');
-  console.log(xy);
-  console.log('------------------------------------');
   Parkingslot.findByPosition(xy[0], xy[1], (err, data) => {
-    console.log(data + " ciao");
+    console.log(JSON.stringify(data) + " ciao");
     if (data !== null) {
       res.status(404).send({
         message: `already exist a Parking with coord ${ps.coord} .`
@@ -44,13 +41,10 @@ exports.create = (req, res) => {
       });
     }
   });
-
-
 };
 //da inserire il controllo per il parcheggio libero
 exports.nearest = (req, res) => {
   //chiamata alla funzione del model per il parcheggio più vicino
-  //var destination = "13.075009882450104,43.13747491759089";
   var destination = req.params.destination;
   Parkingslot.getAll((err, data) => {
     if (err)
@@ -69,7 +63,7 @@ exports.nearest = (req, res) => {
           console.log(p2)
           const d = LatLon.distanceTo(dest, p2)
           console.log(d)
-          if (d < 1000 && data[key].status != 1) {
+          if (d < 1000 && data[key].status == 0) {
             coordparcheggiCinque.push(data[key].coord);
             count++;
             indici.push(count);
@@ -77,7 +71,7 @@ exports.nearest = (req, res) => {
         }
       }
       if (coordparcheggiCinque.length == 0) {
-        res.status(404).send({
+        return res.status(404).send({
           message: `not found a free park .`
         });
       }
@@ -102,16 +96,61 @@ exports.nearest = (req, res) => {
         }
         var minimo = Math.min.apply(null, array);
         var indiceMin = array.indexOf(minimo);
-        //                console.log(body.body.sources[indiceMin].location); //questo
-        res.send(body.body.sources[indiceMin].location);
+        console.log(body.body.sources[indiceMin].location); //questo
 
+        console.log(body.body)
+        //res.send(body);
+        //ritorna la location della source che ha durata minore
+        var array = [];
+        for (var key in body.body.durations) {
+          if (body.body.durations.hasOwnProperty(key)) {
+            array.push(body.body.durations[key][0]);
+          }
+        }
+        var minimo = Math.min.apply(null, array);
+        var indiceMin = array.indexOf(minimo);
+        console.log(body.body.sources[indiceMin].location); //questo
+
+
+        Parkingslot.findByPosition(body.body.sources[indiceMin].location[0], body.body.sources[indiceMin].location[1], (err, data) => {
+          if (data == null) {
+            res.status(400).send({
+              message: `park not found .`
+            });
+          } else {
+            parcheggio = new Parkingslot(data);
+            parcheggio.status = 1;
+            parcheggio.emailDriver=req.decoded.email
+            console.log(data.idparkingslot + " parcheggio")
+            Parkingslot.updateById(data.idparkingslot, parcheggio,
+              (err, data) => {
+                if (err) {
+                  if (err.kind === "not_found") {
+                    res.status(404).send({
+                      message: `Not found Parking slot with id.`
+                    });
+                  } else {
+                    res.status(500).send({
+                      message: "Error updating Customer with id "
+                    });
+                  }
+                } else {
+                  console.log(body.body.sources[indiceMin].location)
+                  res.send(body.body.sources[indiceMin].location);
+                }
+
+              }
+            );
+          }
+        });
+        
       });
     }
 
-
   });
-
 }
+
+
 
 
 exports.findAll = (req, res) => {
@@ -152,6 +191,33 @@ exports.findOne = (req, res) => {
   });
 };
 
+//simula il cambio di status del parcheggio a occupato, se il parcheggio non era prenotato invia una notifica alla polizia municipale
+exports.notification = (req, res) => {
+  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
+  if(req.decoded.admin==false){
+    return res.status(401);
+  }
+  */
+  Parkingslot.findById(req.params.parkingId, (err, data) => {
+
+    console.log(req.params.parkingId + " parking id");
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Parking with id ${req.params.parkingId}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving Parking with id " + req.params.parkingId
+        });
+      }
+    }
+
+    if (data.status == 0) {
+      send.notification(req.params.parkingId);
+    }
+  });
+};
 
 exports.update = (req, res) => {
   /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
@@ -166,30 +232,55 @@ exports.update = (req, res) => {
     });
   }
   console.log(req.params.parkingId);
-
-
-  Parkingslot.updateById(
-
-
-    req.params.parkingId,
-    new Parkingslot(req.body),
-    (err, data) => {
-
-      if (err) {
-        if (err.kind === "not_found") {
-          res.status(404).send({
-            message: `Not found Parking slot with id ${req.params.parkingId}.`
-          });
-        } else {
-          res.status(500).send({
-            message: "Error updating Customer with id " + req.params.parkingId
-          });
-        }
-      } else res.send(data);
-    }
-  );
+  Parkingslot.updateById(req.params.parkingId, new Parkingslot(req.body), (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: 'Not found Parking slot with id ${req.params.parkingId}.'
+        });
+      } else {
+        res.status(500).send({
+          message: "Error updating Customer with id " + req.params.parkingId
+        });
+      }
+    } else res.send(data);
+  });
 };
 
+exports.cancel = (req, res) => {
+  /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
+  if(req.decoded.admin==false){
+    return res.status(401);
+  }
+  */
+  var xy = req.params.park.split(',');
+  Parkingslot.findByPosition(xy[0], xy[1], (err, data) => {
+    if (data == null) {
+      res.status(400).send({
+        message: `park not found .`
+      });
+    } else {
+      parcheggio = new Parkingslot(data);
+      parcheggio.status = 0;
+      parcheggio.emailDriver=null;
+      Parkingslot.updateById(data.idparkingslot, parcheggio,
+        (err, data) => {
+          if (err) {
+            if (err.kind === "not_found") {
+              res.status(404).send({
+                message: `Not found Parking slot with id ${req.params.parkingId}.`
+              });
+            } else {
+              res.status(500).send({
+                message: "Error updating Customer with id " + req.params.parkingId
+              });
+            }
+          } else res.send(data);
+        }
+      );
+    }
+  });
+};
 exports.delete = (req, res) => {
   /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
   if(req.decoded.admin==false){

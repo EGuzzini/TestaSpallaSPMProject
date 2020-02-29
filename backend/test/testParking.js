@@ -149,10 +149,10 @@ describe("Server!", () => {
 
         });
     });
-    describe('/PUT/:id', () => {
+    describe('/UPDATE/:id', () => {
         it("it should UPDATE a parking given the id'", done => {
             let parking = {
-                status: 0,
+                status: 1,
                 coord: "13.075009882450105,43.13747491759090",
                 comune: "Roma",
                 costoorario: 6.3
@@ -164,7 +164,7 @@ describe("Server!", () => {
                 .send(parking)
                 .end((err, res) => {
                     expect(res).to.have.status(200);
-                    expect(res.body).to.have.property('status', 0);
+                    expect(res.body).to.have.property('status', 1);
                     expect(res.body).to.have.property('coord', "13.075009882450105,43.13747491759090");
                     expect(res.body).to.have.property('comune', "Roma");
                     expect(res.body).to.have.property('costoorario', 6.3);
@@ -186,12 +186,24 @@ describe("Server!", () => {
                 .send(parking)
                 .end((err, res) => {
                     expect(res).to.have.status(404);
-                    expect(res.body.message).to.equals("Not found Parking slot with id " + id + ".");
+
                     done();
                 });
 
         });
-
+        it("Cancellation of park reserved", done => {
+            chai.request(app)
+                .get("/parkingnearest/cancellation/" + "13.075009882450105,43.13747491759090")
+                .set('Authorization', 'Bearer ' + token)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('status', 0);
+                    expect(res.body).to.have.property('coord', "13.075009882450105,43.13747491759090");
+                    expect(res.body).to.have.property('comune', "Roma");
+                    expect(res.body).to.have.property('costoorario', 6.3);
+                    done();
+                });
+        });
 
     });
 
@@ -203,25 +215,25 @@ describe("Server!", () => {
 
             chai.request(app)
                 .get("/parkingnearest/" + destination)
+                .set('Authorization', 'Bearer ' + token)
+                .end((err, res) => {
 
-            .end((err, res) => {
-
-                expect([13.074867, 43.137282]);
-                done();
-            });
+                    expect([13.074867, 43.137282]);
+                    done();
+                });
         });
-        it('expected a empy array of nearest parking to the destination', (done) => {
+        it('expected a empty array of nearest parking to the destination', (done) => {
             let destination =
 
                 "1.075009882450105,44.13747491759090"
             chai.request(app)
                 .get("/parkingnearest/" + destination)
+                .set('Authorization', 'Bearer ' + token)
+                .end((err, res) => {
 
-            .end((err, res) => {
-
-                expect([]);
-                done();
-            });
+                    expect([]);
+                    done();
+                });
         });
     });
     describe('/DELETE/:id', () => {
