@@ -120,10 +120,10 @@ exports.nearest = (req, res) => {
           } else {
             parcheggio = new Parkingslot(data);
             parcheggio.status = 1;
-            parcheggio.emailDriver=req.decoded.email
+            parcheggio.emailDriver = req.decoded.email
             console.log(data.idparkingslot + " parcheggio")
             Parkingslot.updateById(data.idparkingslot, parcheggio,
-              (err, data) => {
+              (err, datachanged) => {
                 if (err) {
                   if (err.kind === "not_found") {
                     res.status(404).send({
@@ -135,23 +135,117 @@ exports.nearest = (req, res) => {
                     });
                   }
                 } else {
-                  console.log(body.body.sources[indiceMin].location)
-                  res.send(body.body.sources[indiceMin].location);
+
+                  var park = [body.body.sources[indiceMin].location, data.idparkingslot]
+                  console.log(park)
+                  res.send(park[0]);
                 }
 
               }
             );
           }
         });
-        
+
       });
     }
 
   });
 }
 
+// in base all'email del conducente trova il parcheggio prenotato, se risulta occupato lo scenario termina e risponde ok,
+// se invece è 1 allora risponde errore perchè potrebbe aver sbagliato parcheggio
 
+exports.parked = (req, res) => {
+  Parkingslot.findbyemail(req.decoded.email, (err, data) => {
+    console.log("parked data ", data)
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Parking with email ${req.decoded.email}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving Parking with id " + req.decoded.email
+        });
+      }
+    }
+    if (data.status == 2) {
+      res.send().status(200);
+    } else {
+      res.status(302).send({
+        message: `controllare parcheggio.`
+      });
+    }
+  })
+}
 
+/**
+ * il conducente trova il suo parcheggio occupato
+ * controllo che lo status del suo parcheggio sia 2 e invio la notifica alle forze dell'ordine
+ * 
+ */
+exports.parktaken = (req, res) => {
+  Parkingslot.findbyemail(req.decoded.email, (err, data) => {
+    console.log("parked data ", data)
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Parking with email ${req.decoded.email}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving Parking with id " + req.decoded.email
+        });
+      }
+    }
+    if (data.status == 2) {
+      parcheggio = new Parkingslot(data);
+      parcheggio.emailDriver = null;
+      Parkingslot.updateById(data.idparkingslot, parcheggio,
+        (err, result) => {
+          if (err) {
+            if (err.kind === "not_found") {
+              res.status(404).send({
+                message: `Not found Parking slot with id ${data.idparkingslot}.`
+              });
+            } else {
+              res.status(500).send({
+                message: "Error updating Customer with id " + data.idparkingslot
+              });
+            }
+
+          } else { //N.B. non aspetta la risposta dell'email
+            send.notification([data.idparkingslot, data.coord])
+            res.send().status(200);
+          }
+        });
+    } else {
+      res.status(302).send({
+        message: `controllare parcheggio.`
+      });
+    }
+  })
+}
+
+exports.malfunction = (req, res) => {
+  Parkingslot.findbyemail(req.decoded.email, (err, data) => {
+    console.log("parked data ", data)
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Parking with email ${req.decoded.email}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving Parking with id " + req.decoded.email
+        });
+      }
+    } else {
+      send.notifyMalfunction([data.idparkingslot, data.coord])
+      res.send().status(200);
+    }
+  })
+}
 
 exports.findAll = (req, res) => {
   /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
@@ -191,6 +285,7 @@ exports.findOne = (req, res) => {
   });
 };
 
+//NON HA SENSO
 //simula il cambio di status del parcheggio a occupato, se il parcheggio non era prenotato invia una notifica alla polizia municipale
 exports.notification = (req, res) => {
   /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
@@ -262,7 +357,7 @@ exports.cancel = (req, res) => {
     } else {
       parcheggio = new Parkingslot(data);
       parcheggio.status = 0;
-      parcheggio.emailDriver=null;
+      parcheggio.emailDriver = null;
       Parkingslot.updateById(data.idparkingslot, parcheggio,
         (err, data) => {
           if (err) {
@@ -276,8 +371,7 @@ exports.cancel = (req, res) => {
               });
             }
           } else res.send(data);
-        }
-      );
+        });
     }
   });
 };

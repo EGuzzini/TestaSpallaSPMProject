@@ -7,8 +7,26 @@ const Parkingslot = function (ps) {
   this.coord = ps.coord;
   this.comune = ps.comune;
   this.costoorario = ps.costoorario;
-  this.emailDriver=ps.emailDriver;
+  this.emailDriver = ps.emailDriver;
 };
+
+Parkingslot.findbyemail = (driveremail, result) => {
+  sql.query(`SELECT * FROM parkingslot WHERE emailDriver= '${driveremail}'`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      console.log("found parking slot: ", res[0]);
+      result(null, res[0]);
+      return;
+    }
+    // not found parking slot with the id
+    result({ kind: "not_found" }, null);
+  })
+}
+
 
 Parkingslot.create = (newparkingslot, result) => {
   sql.query("INSERT INTO parkingslot SET ?", newparkingslot, (err, res) => {
@@ -72,7 +90,7 @@ Parkingslot.getAll = (result) => {
 Parkingslot.updateById = (id, parkingslot, result) => {
   sql.query(
     "UPDATE parkingslot SET status = ?, coord =? ,comune = ?, costoorario=?, emailDriver=? WHERE idparkingslot = ?",
-    [parkingslot.status, parkingslot.coord, parkingslot.comune, parkingslot.costoorario,parkingslot.emailDriver, id],
+    [parkingslot.status, parkingslot.coord, parkingslot.comune, parkingslot.costoorario, parkingslot.emailDriver, id],
     (err, res) => {
       if (err) {
         console.log("error: ", err);

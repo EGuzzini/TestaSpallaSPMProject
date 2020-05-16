@@ -80,7 +80,7 @@ exports.login = (req, res) => {
                 driverId: driver.idDriver,
                 admin: false
             }, config.secret, {
-                expiresIn: "20m"
+                expiresIn: "2h"
             });
             res.status(200).json({
                 jwtToken

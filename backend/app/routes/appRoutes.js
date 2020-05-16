@@ -21,9 +21,16 @@ router.delete("/parking", check.checkToken, parkingslot.deleteAll);
 // nearest park to destination
 router.get("/parkingnearest/:destination", check.checkToken, parkingslot.nearest);
 // send notification to municipality police for unauthorized parking
-router.get("/parking/notification/:parkingId", check.checkToken, parkingslot.notification);
+router.get("/parking/notification/:parkingId", check.checkToken, parkingslot.notification);// DA RIVEDERE
 //cancellation of park reserved
 router.get("/parkingnearest/cancellation/:park", check.checkToken, parkingslot.cancel);
+//driver parked in designated area
+router.get("/parking/parked/parkedslot",check.checkToken, parkingslot.parked);
+//driver park occupied
+router.get("/parking/parked/parkoccupied",check.checkToken, parkingslot.parktaken);
+//possible park malfunction
+router.get("/parking/parked/malfunction",check.checkToken, parkingslot.malfunction);
+
 
 // routes for driver
 //create a new user
@@ -46,6 +53,7 @@ router.post("/users/report", check.checkToken, send.sendMail);
 router.post("/passwordReset", driver.recoveryPassword);
 //Change account password
 router.post("/users/changePassword", check.checkToken, driver.changePassword);
+
 
 
 module.exports = router;
