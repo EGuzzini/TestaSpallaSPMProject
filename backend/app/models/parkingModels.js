@@ -89,8 +89,8 @@ Parkingslot.getAll = (result) => {
 
 Parkingslot.updateById = (id, parkingslot, result) => {
   sql.query(
-    "UPDATE parkingslot SET status = ?, coord =? ,comune = ?, costoorario=?, emailDriver=? WHERE idparkingslot = ?",
-    [parkingslot.status, parkingslot.coord, parkingslot.comune, parkingslot.costoorario, parkingslot.emailDriver, id],
+    "UPDATE parkingslot SET status = ?, coord =? ,comune = ?, costoorario=?, emailDriver=?, targaveicolo=? WHERE idparkingslot = ?",
+    [parkingslot.status, parkingslot.coord, parkingslot.comune, parkingslot.costoorario, parkingslot.emailDriver,parkingslot.targaveicolo, id],
     (err, res) => {
       if (err) {
         console.log("error: ", err);

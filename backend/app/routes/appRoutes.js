@@ -19,17 +19,17 @@ router.delete("/parking/:parkingId", check.checkToken, parkingslot.delete);
 // delete all parking slots
 router.delete("/parking", check.checkToken, parkingslot.deleteAll);
 // nearest park to destination
-router.get("/parkingnearest/:destination", check.checkToken, parkingslot.nearest);
+router.get("/parkingnearest/:destination/:targa", check.checkToken, parkingslot.nearest);
 // send notification to municipality police for unauthorized parking
 router.get("/parking/notification/:parkingId", check.checkToken, parkingslot.notification);// DA RIVEDERE
 //cancellation of park reserved
 router.get("/parkingnearest/cancellation/:park", check.checkToken, parkingslot.cancel);
 //driver parked in designated area
-router.get("/parking/parked/parkedslot",check.checkToken, parkingslot.parked);
+router.get("/parking/parked/parkedslot", check.checkToken, parkingslot.parked);
 //driver park occupied
-router.get("/parking/parked/parkoccupied",check.checkToken, parkingslot.parktaken);
+router.get("/parking/parked/parkoccupied", check.checkToken, parkingslot.parktaken);
 //possible park malfunction
-router.get("/parking/parked/malfunction",check.checkToken, parkingslot.malfunction);
+router.get("/parking/parked/malfunction", check.checkToken, parkingslot.malfunction);
 
 
 // routes for driver
@@ -41,8 +41,12 @@ router.post("/login", driver.login)
 router.get("/users", driver.findAll);
 // Retrieve a single driver with Id
 router.get("/users/:driverId", driver.findOne);
+// Retrieve a single driver with Id
+router.get("/users/find/find", check.checkToken, driver.findDriver);
 // Update a driver with driverId
 router.put("/users/:driverId", check.checkToken, driver.update);
+//update by email
+router.post("/users/update/update", check.checkToken, driver.updateByEmail);
 // Delete a driver account logged
 router.delete("/usersid", check.checkToken, driver.delete);
 // delete all driver
@@ -53,7 +57,9 @@ router.post("/users/report", check.checkToken, send.sendMail);
 router.post("/passwordReset", driver.recoveryPassword);
 //Change account password
 router.post("/users/changePassword", check.checkToken, driver.changePassword);
-
-
+//add targa
+router.post("/users/add/addtarga",check.checkToken,driver.addTarga)
+//delete targa
+router.post("/users/delete/deletetarga",check.checkToken, driver.deleteTarga)
 
 module.exports = router;

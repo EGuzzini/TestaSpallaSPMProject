@@ -45,7 +45,10 @@ exports.create = (req, res) => {
 //da inserire il controllo per il parcheggio libero
 exports.nearest = (req, res) => {
   //chiamata alla funzione del model per il parcheggio più vicino
+
   var destination = req.params.destination;
+  var targa = req.params.targa
+  console.log("targa ", targa)
   Parkingslot.getAll((err, data) => {
     if (err)
       res.status(500).send({
@@ -60,9 +63,7 @@ exports.nearest = (req, res) => {
       for (var key in data) {
         if (data.hasOwnProperty(key)) {
           const p2 = LatLon.parse(data[key].coord);
-          console.log(p2)
           const d = LatLon.distanceTo(dest, p2)
-          console.log(d)
           if (d < 1000 && data[key].status == 0) {
             coordparcheggiCinque.push(data[key].coord);
             count++;
@@ -85,8 +86,6 @@ exports.nearest = (req, res) => {
       };
       //richiesta all'API tramite modulo REQUEST 
       request(options, function (err, body) {
-        console.log(body.body)
-        //res.send(body);
         //ritorna la location della source che ha durata minore
         var array = [];
         for (var key in body.body.durations) {
@@ -96,10 +95,8 @@ exports.nearest = (req, res) => {
         }
         var minimo = Math.min.apply(null, array);
         var indiceMin = array.indexOf(minimo);
-        console.log(body.body.sources[indiceMin].location); //questo
-
+        // console.log(body.body.sources[indiceMin].location); //questo
         console.log(body.body)
-        //res.send(body);
         //ritorna la location della source che ha durata minore
         var array = [];
         for (var key in body.body.durations) {
@@ -109,9 +106,7 @@ exports.nearest = (req, res) => {
         }
         var minimo = Math.min.apply(null, array);
         var indiceMin = array.indexOf(minimo);
-        console.log(body.body.sources[indiceMin].location); //questo
-
-
+        // console.log(body.body.sources[indiceMin].location," questo qui"); //questo
         Parkingslot.findByPosition(body.body.sources[indiceMin].location[0], body.body.sources[indiceMin].location[1], (err, data) => {
           if (data == null) {
             res.status(400).send({
@@ -121,6 +116,7 @@ exports.nearest = (req, res) => {
             parcheggio = new Parkingslot(data);
             parcheggio.status = 1;
             parcheggio.emailDriver = req.decoded.email
+            parcheggio.targaveicolo = targa
             console.log(data.idparkingslot + " parcheggio")
             Parkingslot.updateById(data.idparkingslot, parcheggio,
               (err, datachanged) => {
@@ -135,10 +131,12 @@ exports.nearest = (req, res) => {
                     });
                   }
                 } else {
-
-                  var park = [body.body.sources[indiceMin].location, data.idparkingslot]
+                  var park = {
+                    "coordinate": body.body.sources[indiceMin].location[0] + ',' + body.body.sources[indiceMin].location[1],
+                    "id": data.idparkingslot
+                  }
                   console.log(park)
-                  res.send(park[0]);
+                  res.send(park);
                 }
 
               }

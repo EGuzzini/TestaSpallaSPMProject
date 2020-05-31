@@ -9,6 +9,7 @@ const randomstring = require("randomstring");
 exports.checkTokenInit = (req, res) => {
     res.send().status(200)
 }
+
 exports.create = (req, res) => {
     console.log("req body :  " + req.body.username);
     // Validate request
@@ -17,19 +18,22 @@ exports.create = (req, res) => {
             message: "Content can not be empty!"
         });
     }
-    bcrypt.genSalt(saltRounds, function(err, salt) {
+    bcrypt.genSalt(saltRounds, function (err, salt) {
         if (err) {
             throw err
         } else {
-            bcrypt.hash(req.body.password, salt, function(err, hash) {
+            bcrypt.hash(req.body.password, salt, function (err, hash) {
                 if (err) {
                     throw err
                 } else {
+
                     const d = new Driver({
                         username: req.body.username,
                         email: req.body.email,
-                        passwordhash: hash
+                        passwordhash: hash,
+                        targhe: '[]'
                     });
+                    console.log(d, " driver con targa")
                     Driver.findByEmailOrUsername(d.email, d.username, (err, data) => {
                         console.log(data);
                         if (data !== null) {
@@ -38,7 +42,7 @@ exports.create = (req, res) => {
                             });
                         } else {
                             // Save Driver in the database
-                            Driver.create(d, (err, data) => {
+                            Driver.create(d, req.body.targa, (err, data) => {
                                 if (err) {
                                     res.status(500).send({
                                         message: err.message || "Some error occurred while creating the Driver."
@@ -54,7 +58,6 @@ exports.create = (req, res) => {
 
 };
 
-
 exports.login = (req, res) => {
     if (!req.body) {
         res.status(400).send({
@@ -63,7 +66,6 @@ exports.login = (req, res) => {
     }
     let getDriver;
     Driver.findByEmailOrUsername("", req.body.username, (err, driver) => {
-        console.log(JSON.stringify(driver) + "   username ");
         if (!driver) {
             return res.status(401).json({
                 message: "Authentication failed"
@@ -116,6 +118,34 @@ exports.findOne = (req, res) => {
         } else res.send(data);
     });
 };
+exports.findDriver = (req, res) => {
+    console.log(req)
+    Driver.findByEmailOrUsername(req.decoded.email, null, (err, data) => {
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                    message: `Not found driver .`
+                });
+            } else {
+                res.status(500).send({
+                    message: "Error retrieving driver"
+                });
+            }
+
+        } else {
+
+            data.targhe = JSON.parse(data.targhe)
+
+            var nuovo = {
+                "username": data.username,
+                "email": data.email,
+                "targhe": data.targhe
+            }
+
+            res.send(nuovo);
+        }
+    });
+};
 
 exports.update = (req, res) => {
     // Validate Request
@@ -126,7 +156,6 @@ exports.update = (req, res) => {
     }
     console.log(req.params.driverId);
     Driver.updateById(req.params.driverId, new Driver(req.body), (err, data) => {
-
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
@@ -140,15 +169,188 @@ exports.update = (req, res) => {
         } else res.send(data);
     });
 };
+exports.updateByEmail = (req, res) => {
+    console.log(req.body, " req.body")
+    // Validate Request
+    if (!req.body) {
+        res.status(400).send({
+            message: "Content can not be empty!"
+        });
+    }
+    let password = { oldPassword: req.body.oldPassword, newPassword: req.body.newPassword };
+    Driver.findByEmailOrUsername(req.decoded.email, null, (err, data) => {
+        console.log(data, "data driver")
+        if (req.body.oldPassword != "" && req.body.newPassword != "") {
+            if (err) {
+                if (err.kind === "not_found") {
+                    res.status(404).send({
+                        message: `Not found driver .`
+                    });
+                } else {
+                    res.status(500).send({
+                        message: "Error retrieving driver"
+                    });
+                }
+            } else {
+                bcrypt.genSalt(saltRounds, function (err, salt) {
+                    if (err) {
+                        throw err
+                    } else {
+                        bcrypt.compare(password.oldPassword, data.password, (err, response) => {
+
+                            if (!response) {
+                                res.status(401).json({
+                                    message: "The old password is wrong"
+                                });
+                            } else {
+                                bcrypt.genSalt(saltRounds, function (err, salt) {
+                                    if (err) {
+                                        throw err
+                                    } else {
+
+                                        bcrypt.hash(req.body.newPassword, salt, function (err, hash) {
+                                            if (err) {
+                                                throw err
+                                            } else {
+                                                const hashednewpassword = hash;
+                                                if (req.body.username != "") {
+                                                    const d = new Driver({
+                                                        username: req.body.username,
+                                                        passwordhash: hashednewpassword
+                                                    });
+                                                } else {
+                                                    const d = new Driver({
+                                                        username: data.username,
+                                                        passwordhash: hashednewpassword
+                                                    });
+                                                }
+                                                Driver.updateByEmail(
+                                                    req.decoded.email,
+                                                    d,
+                                                    (err, data) => {
+
+                                                        if (err) {
+                                                            if (err.kind === "not_found") {
+                                                                res.status(404).send({
+                                                                    message: `Not found Driver with email` + data.email
+                                                                });
+                                                            } else {
+                                                                res.status(500).send({
+                                                                    message: "Error updating Driver with email " + data.email
+                                                                });
+                                                            }
+                                                        } else res.status(200).send(data);
+                                                    }
+                                                );
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        } else {//caso in cui non cambia la password
+            const d = new Driver({
+                username: req.body.username,
+                passwordhash: data.password
+            });
+            Driver.updateByEmail(req.decoded.email, d, (err, data) => {
+                if (err) {
+                    if (err.kind === "not_found") {
+                        res.status(404).send({
+                            message: `Not found Driver with email ${rec.decoded.email}.`
+                        });
+                    } else {
+                        res.status(500).send({
+                            message: "Error updating Driver with id " + rec.decoded.email
+                        });
+                    }
+                } else res.status(200).send(data);
+            });
+        }
+    });
+
+};
+
+//api per l'aggiunta della targa
+exports.addTarga = (req, res) => {
+    if (!req.body.targa) {
+        res.status(400).send({
+            message: "Content can not be empty!"
+        });
+        return
+    }
+    Driver.findByEmailOrUsername(req.decoded.email, null, (err, data) => {
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                    message: `Not found driver .`
+                });
+            } else {
+                res.status(500).send({
+                    message: "Error retrieving driver"
+                });
+            }
+        } else {
+            Driver.addTarga(req.decoded.email, req.body.targa, (err, data) => {
+                if (err) {
+                    res.status(500).send({
+                        message: "Error adding targa " + req.body.targa
+                    });
+                } else {
+                    //console.log(data)
+                    res.status(200).send(req.body.targa);
+                }
+            })
+        }
+    });
+}
+exports.deleteTarga = (req, res) => {
+    console.log(req.body, "  body")
+    if (!req.body.targa) {
+        res.status(400).send({
+            message: "Content can not be empty!"
+        });
+        return
+    }
+    Driver.findByEmailOrUsername(req.decoded.email, null, (err, data) => {
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                    message: `Not found driver .`
+                });
+            } else {
+                res.status(500).send({
+                    message: "Error retrieving driver"
+                });
+            }
+        } else {
+            Driver.deleteTarga(req.decoded.email, req.body.targa, (err, data) => {
+                if (err) {
+                    res.status(500).send({
+                        message: "Error adding targa " + req.body.targa
+                    });
+                } else {
+                    //console.log(data)
+                    res.status(200).send(req.body.targa);
+                }
+            })
+        }
+    });
+}
+
+
 
 //cancella l'account del driver prendendo il driverId dal token 
 exports.delete = (req, res) => {
     console.log(req.decoded.driverId + " id driver token")
-        /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
-        if(req.decoded.admin==false){
-          return res.status(401);
-        }
-        */
+    /* prende il campo admin dal token per vedere se ha i diritti di accesso per creare i parcheggi
+    if(req.decoded.admin==false){
+      return res.status(401);
+    }
+    */
     Driver.remove(req.decoded.driverId, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
@@ -188,7 +390,7 @@ exports.changePassword = (req, res) => {
                 });
             }
         } else {
-            bcrypt.genSalt(saltRounds, function(err, salt) {
+            bcrypt.genSalt(saltRounds, function (err, salt) {
                 if (err) {
                     throw err
                 } else {
@@ -199,12 +401,12 @@ exports.changePassword = (req, res) => {
                                 message: "The old password is wrong"
                             });
                         } else {
-                            bcrypt.genSalt(saltRounds, function(err, salt) {
+                            bcrypt.genSalt(saltRounds, function (err, salt) {
                                 if (err) {
                                     throw err
                                 } else {
 
-                                    bcrypt.hash(req.body.newpassword, salt, function(err, hash) {
+                                    bcrypt.hash(req.body.newpassword, salt, function (err, hash) {
                                         if (err) {
                                             throw err
                                         } else {
@@ -261,7 +463,7 @@ exports.recoveryPassword = (req, res) => {
             }
         } else {
             getDriver = driver;
-            bcrypt.genSalt(saltRounds, function(err, salt) {
+            bcrypt.genSalt(saltRounds, function (err, salt) {
                 if (err) {
                     throw err
                 } else {
@@ -269,7 +471,7 @@ exports.recoveryPassword = (req, res) => {
                         length: 8,
                         charset: 'alphabetic'
                     });
-                    bcrypt.hash(newpassword, salt, function(err, hash) {
+                    bcrypt.hash(newpassword, salt, function (err, hash) {
                         if (err) {
                             throw err
                         } else {
@@ -310,7 +512,7 @@ exports.recoveryPassword = (req, res) => {
                                             subject: mailData.subject,
                                             text: mailData.text + newpassword
                                         };
-                                        transporter.sendMail(mailOptions, function(error, info) {
+                                        transporter.sendMail(mailOptions, function (error, info) {
                                             if (error) {
                                                 res.status(400); //error
                                             } else {

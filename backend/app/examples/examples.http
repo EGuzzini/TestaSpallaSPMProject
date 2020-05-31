@@ -48,8 +48,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsI
 ###
 
 //get nearest by id
-GET http://localhost:80/parkingnearest/13.55253,43.39855 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbUBnbWFpbC5pdCIsImRyaXZlcklkIjozMzYsImFkbWluIjpmYWxzZSwiaWF0IjoxNTg5NDY0NjA0LCJleHAiOjE1ODk0NzE4MDR9.Dn6fsEkmfBztNijZCHu7Q8ltfreZkyiZhVtVxsy4mCg
+GET http://localhost:80/parkingnearest/13.55253,43.39855/pippo HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbGxpQGdtYWlsLml0IiwiZHJpdmVySWQiOjM1NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1OTA5MzMyODgsImV4cCI6MTU5MDk0MDQ4OH0.Eju1si6UDn8Fz4i1VWgm0Zh1r0YiP91SMwEaMM2On88
 ###
 
 //parking sensor trigger
@@ -81,11 +81,14 @@ POST http://localhost:80/register HTTP/1.1
 content-type: application/json
 
 {
-    "username": "Guzzo",
-    "email": "sam@gmail.it",
-    "password": "samuele"
+    "username": "willi",
+    "email": "willi@gmail.it",
+    "password": "samuele",
+    "targa": "ED106JG"
 }
 ###
+
+//LOGIN GUZZO
 
 POST http://localhost:80/login HTTP/1.1
 content-type: application/json
@@ -96,6 +99,54 @@ content-type: application/json
     "password": "samuele"
 }
 ###
+
+//login WILLI
+
+POST http://localhost:80/login HTTP/1.1
+content-type: application/json
+
+{
+    "username": "willi",
+    "email": "willi@gmail.it",
+    "password": "samuele"
+    }
+###
+
+POST http://localhost:80/users/update/update HTTP/1.1
+content-type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbGxpQGdtYWlsLml0IiwiZHJpdmVySWQiOjM0NiwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1ODk5MDc5MjMsImV4cCI6MTU4OTkxNTEyM30.U457a_lTtTk73M4zKIbZ1PRd021U44cxpaI0m5ILaXQ
+
+{
+    "username": "willi",
+    "email": "willi@gmail.it"
+}
+###
+
+//add targa
+POST http://localhost:80/users/add/addtarga HTTP/1.1
+content-type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbUBnbWFpbC5pdCIsImRyaXZlcklkIjozMzYsImFkbWluIjpmYWxzZSwiaWF0IjoxNTkwNTAxMDMzLCJleHAiOjE1OTA1MDgyMzN9.NTTsQaMnc5ktAtm8sGF-oF86u0YsJ8PoTd4kNddfJGk
+
+{
+    "targa": "EF220GR"
+}
+###
+
+//delete targa
+POST http://localhost:80/users/delete/deletetarga HTTP/1.1
+content-type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbGxpQGdtYWlsLml0IiwiZHJpdmVySWQiOjM1NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1OTA1NzUxNDEsImV4cCI6MTU5MDU4MjM0MX0.tqbsNbiQ-n_NHQZuBotgZNV8pUfvC6nSoAZMzPxCtQ4
+
+{
+    "targa": ""
+}
+###
+
+//get driver by email
+GET http://localhost:80/users/find/find HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbUBnbWFpbC5pdCIsImRyaXZlcklkIjozMzYsImFkbWluIjpmYWxzZSwiaWF0IjoxNTkwNTAxNjIzLCJleHAiOjE1OTA1MDg4MjN9.pomdmwHmSQ3ficeA9DHzP0t3_gLXHbI-hVP0i_BzOi8
+###
+
 
 //get all drivers
 GET http://localhost:80/users HTTP/1.1
