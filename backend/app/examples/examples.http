@@ -1,5 +1,44 @@
 
+//create parking area
+POST http://localhost:80/parking/area HTTP/1.1
+content-type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbGxpQGdtYWlsLml0IiwiZHJpdmVySWQiOjM1NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1OTI5MjQ4MjUsImV4cCI6MTU5MjkzMjAyNX0.nwj_UJCusPgdM6F6-mZGtiIJORFF0GsrZ6uWsfgpnEM
 
+{
+    "nomeparcheggio":"CiccioPanzo",
+    "coordinate": "13.550911,43.406311",
+    "comune": "Recanati"
+}
+###
+//update parking area
+PUT http://localhost:80/parking/area/1 HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbGxpQGdtYWlsLml0IiwiZHJpdmVySWQiOjM1NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1OTE4MDI5NzcsImV4cCI6MTU5MTgxMDE3N30.utH8JFmusKLIaVpUia3JnnvT96SkgRrKpvMbbnaEPug
+
+{
+   "nomeparcheggio":"Cavour",
+    "coordinate": "13.550914,43.406316",
+    "comune": "Recanati"
+}
+###
+//get all area
+GET http://localhost:80/parkingarea HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbGxpQGdtYWlsLml0IiwiZHJpdmVySWQiOjM1NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1OTE4MDI5NzcsImV4cCI6MTU5MTgxMDE3N30.utH8JFmusKLIaVpUia3JnnvT96SkgRrKpvMbbnaEPug
+###
+//get area by id
+GET http://localhost:80/parking/area/1 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbGxpQGdtYWlsLml0IiwiZHJpdmVySWQiOjM1NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1OTE4MDI5NzcsImV4cCI6MTU5MTgxMDE3N30.utH8JFmusKLIaVpUia3JnnvT96SkgRrKpvMbbnaEPug
+###
+//remove area
+DELETE http://localhost:80/parking/area/1 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbGxpQGdtYWlsLml0IiwiZHJpdmVySWQiOjM1NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1OTE4MDI5NzcsImV4cCI6MTU5MTgxMDE3N30.utH8JFmusKLIaVpUia3JnnvT96SkgRrKpvMbbnaEPug
+###
+//delete all park
+DELETE http://localhost:80/parkingarea HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbGxpQGdtYWlsLml0IiwiZHJpdmVySWQiOjM1NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1OTE4MDI5NzcsImV4cCI6MTU5MTgxMDE3N30.utH8JFmusKLIaVpUia3JnnvT96SkgRrKpvMbbnaEPug
+###
+
+//--------------parking slot---------------------------------------------
 //create park
 POST http://localhost:80/parking HTTP/1.1
 content-type: application/json
@@ -49,13 +88,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsI
 
 //get nearest by id
 GET http://localhost:80/parkingnearest/13.55253,43.39855/pippo HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbGxpQGdtYWlsLml0IiwiZHJpdmVySWQiOjM1NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1OTA5MzMyODgsImV4cCI6MTU5MDk0MDQ4OH0.Eju1si6UDn8Fz4i1VWgm0Zh1r0YiP91SMwEaMM2On88
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbGxpQGdtYWlsLml0IiwiZHJpdmVySWQiOjM1NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1OTI5MjQ4MjUsImV4cCI6MTU5MjkzMjAyNX0.nwj_UJCusPgdM6F6-mZGtiIJORFF0GsrZ6uWsfgpnEM
 ###
 
 //parking sensor trigger
 GET http://localhost:80/parking/parked/parkedslot HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbUBnbWFpbC5pdCIsImRyaXZlcklkIjozMzYsImFkbWluIjpmYWxzZSwiaWF0IjoxNTg5NDY0NjA0LCJleHAiOjE1ODk0NzE4MDR9.Dn6fsEkmfBztNijZCHu7Q8ltfreZkyiZhVtVxsy4mCg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbGxpQGdtYWlsLml0IiwiZHJpdmVySWQiOjM1NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1OTE2MDM2MjcsImV4cCI6MTU5MTYxMDgyN30.WwkgzPDVJLJ-BiV2E6wjlMYdzNvsGjBrzLxvkvqQlZ8
 ###
+
 //park occupied
 GET http://localhost:80/parking/parked/parkoccupied HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbUBnbWFpbC5pdCIsImRyaXZlcklkIjozMzYsImFkbWluIjpmYWxzZSwiaWF0IjoxNTg5NDY0NjA0LCJleHAiOjE1ODk0NzE4MDR9.Dn6fsEkmfBztNijZCHu7Q8ltfreZkyiZhVtVxsy4mCg
@@ -70,8 +110,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbUBnb
 ###
 
 //get cancellation
-GET http://localhost:80/parkingnearest/cancellation/13.552461,43.398963 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbUBnbWFpbC5pdCIsImRyaXZlcklkIjozMzYsImFkbWluIjpmYWxzZSwiaWF0IjoxNTg5NDY0NjA0LCJleHAiOjE1ODk0NzE4MDR9.Dn6fsEkmfBztNijZCHu7Q8ltfreZkyiZhVtVxsy4mCg
+GET http://localhost:80/parkingnearest/cancellation/cancel/13.552461,43.398963 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbUBnbWFpbC5pdCIsImRyaXZlcklkIjozMzYsImFkbWluIjpmYWxzZSwiaWF0IjoxNTkxMDkxMDM3LCJleHAiOjE1OTEwOTgyMzd9.0ug1s-SAWT5RGvkb2O_e8SkVDHE5ICfdyh46imf7qD0
 ###
 
 //DRIVER EXAMPLE
@@ -94,9 +134,9 @@ POST http://localhost:80/login HTTP/1.1
 content-type: application/json
 
 {
-    "username": "Guzzo",
+    "username": "Willy",
     "email": "sam@gmail.it",
-    "password": "samuele"
+    "password": "morichetta"
 }
 ###
 
@@ -125,7 +165,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbGxpQGdtYWls
 //add targa
 POST http://localhost:80/users/add/addtarga HTTP/1.1
 content-type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbUBnbWFpbC5pdCIsImRyaXZlcklkIjozMzYsImFkbWluIjpmYWxzZSwiaWF0IjoxNTkwNTAxMDMzLCJleHAiOjE1OTA1MDgyMzN9.NTTsQaMnc5ktAtm8sGF-oF86u0YsJ8PoTd4kNddfJGk
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbGxpQGdtYWlsLml0IiwiZHJpdmVySWQiOjM1NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1OTE4ODc0NjYsImV4cCI6MTU5MTg5NDY2Nn0.Gw4h5XeRmu5RPN3rE3x0UoN5IorlIeWVrbT1MkPdDAM
 
 {
     "targa": "EF220GR"

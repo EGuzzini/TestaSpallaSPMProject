@@ -21,15 +21,31 @@ router.delete("/parking", check.checkToken, parkingslot.deleteAll);
 // nearest park to destination
 router.get("/parkingnearest/:destination/:targa", check.checkToken, parkingslot.nearest);
 // send notification to municipality police for unauthorized parking
-router.get("/parking/notification/:parkingId", check.checkToken, parkingslot.notification);// DA RIVEDERE
+//router.get("/parking/notification/:parkingId", check.checkToken, parkingslot.notification);// DA RIVEDERE
 //cancellation of park reserved
-router.get("/parkingnearest/cancellation/:park", check.checkToken, parkingslot.cancel);
+router.get("/parkingnearest/cancellation/cancel/:park", check.checkToken, parkingslot.cancel);
 //driver parked in designated area
 router.get("/parking/parked/parkedslot", check.checkToken, parkingslot.parked);
 //driver park occupied
 router.get("/parking/parked/parkoccupied", check.checkToken, parkingslot.parktaken);
 //possible park malfunction
 router.get("/parking/parked/malfunction", check.checkToken, parkingslot.malfunction);
+
+//----------Parking area-------------------------------------------
+// create parking area
+router.post("/parking/area", check.checkToken, parkingslot.createarea);
+// Retrieve all Parking slots
+router.get("/parkingarea", check.checkToken, parkingslot.findAllArea);
+// Retrieve a single Parking slot with parkingId
+router.get("/parking/area/:parkingareaId", check.checkToken, parkingslot.findOneArea);
+// Update a Parking slot with parkingId
+router.put("/parking/area/:parkingareaId", check.checkToken, parkingslot.updateArea);
+// Delete a Parking slot with parkingId
+router.delete("/parking/area/:parkingareaId", check.checkToken, parkingslot.deleteArea);
+// delete all parking slots
+router.delete("/parkingarea", check.checkToken, parkingslot.deleteAllArea);
+
+
 
 
 // routes for driver

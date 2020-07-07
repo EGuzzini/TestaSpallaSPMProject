@@ -71,11 +71,36 @@ let notifyMalfunction = (req, res) => {
 
     let mailOptions = {
         from: 'smartparkingNoreplyTestaspalla@gmail.com',
-        to: 'emanuele01.guzzini@studenti.unicam.it',
+        to: 'william.taruschio@studenti.unicam.it',
         // to: 'dante.domizi@studenti.unicam.it',
         subject: "AVVISO CONTROLLO PARCHEGGIO GUASTO ",
-        text: "il parcheggio numero " + req[0] + "alla posizione " + req[1] + " potrebbe essere guasto, si prega di controllare"
+        text: "il parcheggio numero " + req[0] + " alla posizione " + req[1] + " potrebbe essere guasto, si prega di controllare"
     };
+
+
+    let info = transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error)
+        } else {
+            //    console.log('Message sent: ' + info.response);
+            return
+        }
+
+    });
+
+};
+
+let general = (mailOptions,req, res) => {
+
+    //let mailData = { subject: req.body.subject, text: req.body.text };
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'smartparkingNoreplyTestaspalla@gmail.com',
+            pass: 'Smartparking'
+        }
+    });
+
     console.log("request nodemailer ", req);
     console.log("response nodemailer ", res);
 
@@ -90,6 +115,7 @@ let notifyMalfunction = (req, res) => {
     });
 
 };
+
 module.exports = {
     sendMail: sendMail,
     notification: notification,

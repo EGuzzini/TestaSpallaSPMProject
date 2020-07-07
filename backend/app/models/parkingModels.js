@@ -8,6 +8,7 @@ const Parkingslot = function (ps) {
   this.comune = ps.comune;
   this.costoorario = ps.costoorario;
   this.emailDriver = ps.emailDriver;
+  this.targaveicolo = ps.targaveicolo;
 };
 
 Parkingslot.findbyemail = (driveremail, result) => {

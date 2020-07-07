@@ -56,6 +56,7 @@ exports.nearest = (req, res) => {
             count = 0;
             var indici = [];
             var coordparcheggiCinque = []
+            
             const dest = LatLon.parse(destination);
             //calcola la distanza tra le coordinate con l'utilizzo di una funzione geodesiana, se si trova nel raggio di 1000 metri dalla destinazione ed è disponibile allora viene restituito
             for (var key in data) {
@@ -71,6 +72,7 @@ exports.nearest = (req, res) => {
                     }
                 }
             }
+            
             if (coordparcheggiCinque.length == 0) {
                 return res.status(404).send({
                     message: `not found a free park .`

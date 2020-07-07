@@ -3,10 +3,9 @@ const sql = require("./db.js");
 // constructor campi della tabella parking slot del database
 const Parkingarea = function (pa) {
 
- this.nomeparcheggio=pa.nomeparcheggio
-  this.coordinate = pa.coordinate;
-  this.postitotali = pa.postitotali;
-  this.postidisponibili = pa.postidisponibili;
+  this.nomeparcheggio = pa.nomeparcheggio
+  this.coordinate = pa.coordinate
+  this.comune = pa.comune
   this.prenotazioni = pa.prenotazioni
 
 };
@@ -15,7 +14,7 @@ const Parkingarea = function (pa) {
 
 
 Parkingarea.create = (newparkingarea, result) => {
-  sql.query("INSERT INTO parkingslot SET ?", newparkingarea, (err, res) => {
+  sql.query("INSERT INTO parkingarea SET ?", newparkingarea, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -45,7 +44,7 @@ Parkingarea.findById = (parkingId, result) => {
 
 
 Parkingarea.findByPosition = (x, y, result) => {
-  sql.query(`SELECT * FROM parkingarea WHERE SUBSTRING_INDEX(coord, ',', 1) =${x} AND SUBSTRING_INDEX(coord, ',', -1) =${y}`, (err, res) => {
+  sql.query(`SELECT * FROM parkingarea WHERE SUBSTRING_INDEX(coordinate, ',', 1) =${x} AND SUBSTRING_INDEX(coordinate, ',', -1) =${y}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -76,8 +75,8 @@ Parkingarea.getAll = (result) => {
 
 Parkingarea.updateById = (id, parkingarea, result) => {
   sql.query(
-    "UPDATE parkingarea SET nomeparcheggio = ?, coordinate =? ,postitotali=?,postidisponibili=? WHERE idparkingarea = ?",
-    [parkingarea.nome, parkingarea.coordinate, parkingarea.postitotali, parkingarea.postidisponibili, id],
+    "UPDATE parkingarea SET nomeparcheggio = ?, coordinate =?, comune=? WHERE idparkingarea = ?",
+    [parkingarea.nomeparcheggio, parkingarea.coordinate, parkingarea.comune, id],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -95,7 +94,40 @@ Parkingarea.updateById = (id, parkingarea, result) => {
   );
 };
 
+Parkingarea.addPrenotazione = (idArea, targa, result) => {
+  console.log({ targa })
+  sql.query(`SELECT JSON_CONTAINS(prenotazioni,'"${targa}"','$') as prenotazioni from parkingarea where  idparkingarea ='${idArea}'`, (err, res) => {
+    var esiste = res[0].prenotazioni
+    console.log({ esiste })
+    if (esiste == 0) {
+      sql.query(`update parkingarea SET prenotazioni=JSON_ARRAY_APPEND(prenotazioni,'$','${targa}') where idparkingarea ='${idArea}'`, (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(err, null);
+          return;
+        }
+        result(null, { ...res });
+      })
+    } else {
+      
+      result(null,{ esiste })
+    }
+  })
+}
+
+Parkingarea.deletePrenotazione = (idArea, targa, result) => {
+  sql.query(`update parkingarea SET prenotazioni=Json_remove(prenotazioni, replace(json_search(prenotazioni, 'one', '${targa}'), '"', '')) where idparkingarea ='${idArea}' and json_search(prenotazioni, 'one', '${targa}')`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    result(null, { ...res });
+  })
+}
+
 Parkingarea.remove = (id, result) => {
+  console.log({ id })
   sql.query("DELETE FROM parkingarea WHERE idparkingarea = ?", id, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -125,4 +157,54 @@ Parkingarea.removeAll = result => {
   });
 };
 
+Parkingarea.findbytarga = (targa, result) => {
+  sql.query(`SELECT * FROM parkingarea WHERE JSON_CONTAINS(prenotazioni,'"${targa}"','$')=true`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      console.log("found parking slot: ", res[0]);
+      result(null, res);
+      return;
+    }
+    // not found parking slot with the id
+    result({ kind: "not_found" }, null);
+  })
+}
+
+Parkingarea.findprenotazione = (targa,x, y, result) => {
+  console.log({x},{y})
+  sql.query(`SELECT * FROM parkingarea WHERE SUBSTRING_INDEX(coordinate, ',', 1) =${x} AND SUBSTRING_INDEX(coordinate, ',', -1) =${y}  and JSON_CONTAINS(prenotazioni,'"${targa}"','$')=true `, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      console.log("found parking slot: ", res[0]);
+      result(null, res);
+      return;
+    }
+    // not found parking slot with the id
+    result({ kind: "not_found" }, null);
+  })
+}
+Parkingarea.findliberi = (targa, result) => {
+  sql.query(`SELECT * FROM parkingarea WHERE JSON_CONTAINS(prenotazioni,'"${targa}"','$')=false`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      console.log("found parking slot: ", res[0]);
+      result(null, res);
+      return;
+    }
+    // not found parking slot with the id
+    result({ kind: "not_found" }, null);
+  })
+}
 module.exports = Parkingarea;

@@ -2,7 +2,6 @@ const sql = require("./db.js");
 
 // constructor campi della tabella parking slot del database
 const Driver = function (d) {
-
     this.username = d.username;
     this.email = d.email;
     this.password = d.passwordhash;
@@ -20,19 +19,11 @@ Driver.create = (newdriver, targa, result) => {
 
         result(null, { ...newdriver });
         console.log("created driver: ", { ...newdriver });
-        //result(null, {...newdriver });
-    });/*
-    sql.query(`update driver SET targhe=JSON_ARRAY("${targa}") where email ='${newdriver.email}'`, (err, res) => {
-        if (err) {
-            console.log("error: ", err);
-            result(err, null);
-            return;
-        }
 
-        result(null, { ...newdriver });
-    })*/
+    });
 };
 Driver.addTarga = (email, targa, result) => {
+    console.log({ targa })
     sql.query(`SELECT JSON_CONTAINS(targhe,'"${targa}"','$') as targa from DRIVER where  email ='${email}'`, (err, res) => {
         var esiste = res[0].targa
         if (esiste == 0) {

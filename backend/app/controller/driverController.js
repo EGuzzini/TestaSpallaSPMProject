@@ -103,8 +103,6 @@ exports.findAll = (req, res) => {
 
 exports.findOne = (req, res) => {
     Driver.findById(req.params.driverId, (err, data) => {
-
-        console.log(req.params.driverId + " driver id");
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
@@ -119,7 +117,6 @@ exports.findOne = (req, res) => {
     });
 };
 exports.findDriver = (req, res) => {
-    console.log(req)
     Driver.findByEmailOrUsername(req.decoded.email, null, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
@@ -133,15 +130,12 @@ exports.findDriver = (req, res) => {
             }
 
         } else {
-
             data.targhe = JSON.parse(data.targhe)
-
             var nuovo = {
                 "username": data.username,
                 "email": data.email,
                 "targhe": data.targhe
             }
-
             res.send(nuovo);
         }
     });
@@ -154,7 +148,6 @@ exports.update = (req, res) => {
             message: "Content can not be empty!"
         });
     }
-    console.log(req.params.driverId);
     Driver.updateById(req.params.driverId, new Driver(req.body), (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
@@ -225,10 +218,7 @@ exports.updateByEmail = (req, res) => {
                                                     });
                                                 }
                                                 Driver.updateByEmail(
-                                                    req.decoded.email,
-                                                    d,
-                                                    (err, data) => {
-
+                                                    req.decoded.email,d,(err, data) => {
                                                         if (err) {
                                                             if (err.kind === "not_found") {
                                                                 res.status(404).send({
