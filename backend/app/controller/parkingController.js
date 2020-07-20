@@ -1,9 +1,75 @@
+const moment = require('moment')
 const Parkingslot = require("../models/parkingModels.js");
 const Parkingarea = require("../models/parkingareaModel");
+const Parkingstore = require("../models/parkingstoreModel")
 const request = require('request');
 const LatLon = require('../../node_modules/geodesy/latlon-spherical.js');
 const send = require("../controller/mailSender.js");
 
+exports.findParkstore = (req, res) => {
+
+  Parkingstore.findById(req.body.idparkstore, (req, result) => {
+    var secondi = (moment(result.endDate, 'YYYY-MM-DD hh:mm:ss')).diff(moment(result.startDate, 'YYYY-MM-DD hh:mm:ss'),'seconds')
+    var costo =+((result.costoOra/3600)*secondi).toFixed(2)
+    
+    res.send({costo})
+  })
+
+
+
+};
+
+
+exports.trigger = (req, res) => {
+  Parkingslot.findById(req.body.id, (err, data) => {
+
+    console.log(req.body.id + " parking id");
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Parking with id ${req.body.id}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving Parking with id " + req.body.id
+        });
+      }
+    } else {
+      parcheggio = new Parkingslot(data);
+      if (data.status == 1) {
+        parcheggio.status = 2
+      }
+      if (data.status == 2) {
+        Parkingstore.endPark(data.idparkingslot, data.emailDriver, (err, res) => {
+          if (err)
+            res.status(500).send({
+              message: err.message || "Some error occurred while creating the Parking slot."
+            });
+          else console.log(res);
+        })
+        parcheggio.status = 1
+      }
+      Parkingslot.updateById(data.idparkingslot, parcheggio,
+        (err, datachanged) => {
+          if (err) {
+            if (err.kind === "not_found") {
+              res.status(404).send({
+                message: `Not found Parking slot with id.`
+              });
+            } else {
+              res.status(500).send({
+                message: "Error updating parking with id "
+              });
+            }
+          } else {
+            console.log(datachanged)
+          }
+
+        }
+      );
+    };
+  });
+}
 
 exports.create = (req, res) => {
 
@@ -62,7 +128,6 @@ exports.nearest = (req, res) => {
         });
       }
       else {
-        console.log({ dataArea })
 
         const dest = LatLon.parse(destination);
         //calcola la distanza tra le coordinate con l'utilizzo di una funzione geodesiana, se si trova nel raggio di 1000 metri dalla destinazione ed è disponibile allora viene restituito
@@ -80,6 +145,7 @@ exports.nearest = (req, res) => {
         indicipark = indicipark.join(';');
 
       }
+      console.log({ coordparcheggi })
       const options = {
         url: 'https://api.mapbox.com/directions-matrix/v1/mapbox/walking/' + destination + ';' + coordparcheggi + '?sources=' + indicipark + '&destinations=0&access_token=pk.eyJ1Ijoid2lsbGlhbTk2IiwiYSI6ImNrNTN3YXJ2MDBidWIzZ2s2cWpubHhwcG0ifQ.bUTnoo7Hqb193F8MthF0uw',
         method: 'GET',
@@ -88,6 +154,7 @@ exports.nearest = (req, res) => {
       //richiesta all'API tramite modulo REQUEST 
       request(options, function (err, body) {
         console.log(body.body)
+        console.log("source  " + JSON.stringify(body.body.sources[3]))
         //ritorna la location della source che ha durata minore
         var array = body.body.durations.map(v => v[0])
         console.table({ array })
@@ -176,12 +243,14 @@ distanzaMinima = (data, dataArea, dest, res) => {
       const p2 = LatLon.parse(data[key].coord);
       const d = LatLon.distanceTo(dest, p2)
       if (d < 1000 && data[key].status == 0) {
+        console.log(data[key].idparkingslot + "  id")
         coordparcheggiCinque.push(data[key].coord);
         count++;
         indici.push(count);
       }
     }
   }
+  console.log(coordparcheggiCinque + " coord liberi")
   for (var key in dataArea) {
     if (data.hasOwnProperty(key)) {
       const p2 = LatLon.parse(dataArea[key].coordinate);
@@ -214,6 +283,10 @@ exports.parked = (req, res) => {
       }
     }
     if (data.status == 2) {
+      //chiamata a parkstore
+      Parkingstore.createStartPark(data.idparkingslot, req.decoded.email, data.costoorario, (err, data) => {
+        console.log(data)
+      })
       res.send().status(200);
     } else {
       send.notifyMalfunction([data.idparkingslot, data.coord])

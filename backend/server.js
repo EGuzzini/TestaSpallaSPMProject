@@ -10,6 +10,7 @@ const driver = require("../backend/app/controller/driverController.js");
 // configure body parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
 app.get("/", check.checkToken, driver.checkTokenInit);
 /*
 app.get("/", (req, res) => {

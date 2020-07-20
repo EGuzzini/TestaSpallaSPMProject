@@ -1,3 +1,15 @@
+//parking store
+//find park store
+POST http://localhost:80/findstore HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbGxpQGdtYWlsLml0IiwiZHJpdmVySWQiOjM1NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1OTUwMDQ5MDEsImV4cCI6MTU5NTAxMjEwMX0.-XSvj0TP6stzIoe31cHcHTjqvqc9wefSowMhbsrlUS4
+
+{
+    "idparkstore":6
+}
+###
+
+
 
 //create parking area
 POST http://localhost:80/parking/area HTTP/1.1
@@ -40,17 +52,19 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbGxpQ
 
 //--------------parking slot---------------------------------------------
 //create park
+
 POST http://localhost:80/parking HTTP/1.1
 content-type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbUBnbWFpbC5pdCIsImRyaXZlcklkIjozMzYsImFkbWluIjpmYWxzZSwiaWF0IjoxNTg3NjUxMzg4LCJleHAiOjE1ODc2NTI1ODh9.8-oYsxu2JovKLtMwH2dp4i69Yg9dnkCtMEBZSd-sXNs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbGxpQGdtYWlsLml0IiwiZHJpdmVySWQiOjM1NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1OTQ2NjA2NDcsImV4cCI6MTU5NDY2Nzg0N30.RHWsEQClHZsJx3C1XgWhdgq8RHnp-bhVW0ochfCEwTE
 
 {
-    "status": 0,
+    "status": 1,
     "coord": "43.39904,13.55244",
-    "comune": "Recanati",
-    "costoorario": 1.4
+    "comune": "PROVA",
+    "costoorario": 1.6
 }
 ###
+
 //home
 GET http://localhost:80/ HTTP/1.1
 ###
@@ -68,7 +82,7 @@ content-type: application/json
 
 //remove park
 DELETE http://localhost:80/parking/133 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsImRyaXZlcklkIjo0NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1ODIyMDU0MDEsImV4cCI6MTU4MjIwNjYwMX0.AplICz-EEoZB5cwXKSH_a1WF8jHb-2ouUm6kAdqYSXQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbGxpQGdtYWlsLml0IiwiZHJpdmVySWQiOjM1NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1OTQ2NjA2NDcsImV4cCI6MTU5NDY2Nzg0N30.RHWsEQClHZsJx3C1XgWhdgq8RHnp-bhVW0ochfCEwTE
 ###
 
 //get all park
@@ -87,13 +101,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbSIsI
 ###
 
 //get nearest by id
-GET http://localhost:80/parkingnearest/13.55253,43.39855/pippo HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbGxpQGdtYWlsLml0IiwiZHJpdmVySWQiOjM1NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1OTI5MjQ4MjUsImV4cCI6MTU5MjkzMjAyNX0.nwj_UJCusPgdM6F6-mZGtiIJORFF0GsrZ6uWsfgpnEM
+GET http://localhost:80/parkingnearest/13.552525,43.398551/pippo HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbGxpQGdtYWlsLml0IiwiZHJpdmVySWQiOjM1NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1OTQ5MTI3OTQsImV4cCI6MTU5NDkxOTk5NH0.p5y-mOPNDYinDB-EOaMhYOJ0IFUtu7XGT-hZznPYcdM
 ###
 
 //parking sensor trigger
 GET http://localhost:80/parking/parked/parkedslot HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbGxpQGdtYWlsLml0IiwiZHJpdmVySWQiOjM1NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1OTE2MDM2MjcsImV4cCI6MTU5MTYxMDgyN30.WwkgzPDVJLJ-BiV2E6wjlMYdzNvsGjBrzLxvkvqQlZ8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbGxpQGdtYWlsLml0IiwiZHJpdmVySWQiOjM1NCwiYWRtaW4iOmZhbHNlLCJpYXQiOjE1OTQ5MTI3OTQsImV4cCI6MTU5NDkxOTk5NH0.p5y-mOPNDYinDB-EOaMhYOJ0IFUtu7XGT-hZznPYcdM
 ###
 
 //park occupied

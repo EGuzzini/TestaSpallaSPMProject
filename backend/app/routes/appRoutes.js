@@ -4,6 +4,12 @@ const check = require("../controller/checkToken.js");
 const parkingslot = require("../controller/parkingController.js");
 const driver = require("../controller/driverController.js");
 const send = require("../controller/mailSender.js");
+const stripe = require("../controller/stripe.js");
+
+//PROVA BOTTONE TRIGGER
+router.post("/trigger",parkingslot.trigger);
+//find parkingstore
+router.post("/findstore",parkingslot.findParkstore)
 
 
 // Create a new Parking slot
@@ -46,8 +52,6 @@ router.delete("/parking/area/:parkingareaId", check.checkToken, parkingslot.dele
 router.delete("/parkingarea", check.checkToken, parkingslot.deleteAllArea);
 
 
-
-
 // routes for driver
 //create a new user
 router.post("/register", driver.create);
@@ -74,8 +78,13 @@ router.post("/passwordReset", driver.recoveryPassword);
 //Change account password
 router.post("/users/changePassword", check.checkToken, driver.changePassword);
 //add targa
-router.post("/users/add/addtarga",check.checkToken,driver.addTarga)
+router.post("/users/add/addtarga", check.checkToken, driver.addTarga)
 //delete targa
-router.post("/users/delete/deletetarga",check.checkToken, driver.deleteTarga)
+router.post("/users/delete/deletetarga", check.checkToken, driver.deleteTarga)
+
+
+//STRIPE Route
+router.post("/webhook",stripe.webhook)
+router.post("/park/payment",stripe.create_payment_intent)
 
 module.exports = router;
